@@ -2,20 +2,49 @@ import "./style.css";
 import { client } from "./components/client.js";
 
 async function getData() {
-  const data = await client.execute("select * from events").then((response) => {
-    const res = response.rows;
-    res.forEach((row) => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-<td>${row[0]}</td>
+  const data = await client
+    .execute("select * from events order by date")
+    .then((response) => {
+      const res = response.rows;
+      res.forEach((row) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
 <td>${row[1]}</td>
 <td>${row[2]}</td>
 <td>${row[3]}</td>
 <td>${row[4]}</td>
 `;
-      document.getElementById("data").appendChild(tr);
+        tr.dataset.id = row[0];
+        document.getElementById("data").appendChild(tr);
+      });
+      res.forEach((row) => {
+        const col = document.createElement("div");
+        col.innerHTML = `
+<div>
+  <div class="grid-header">
+    <div class="grid-date">${row.date.split("T")[0]}</div>
+    <div class="grid-time">${row.date.split("T")[1]}</div>
+  </div>
+  <div class="row">${row.item === "chiller" ? row.type : ""}</div>
+  <div class="row">${row.item === "2100" ? row.type : ""}</div>
+  <div class="row">${row.item === "3200" ? row.type : ""}</div>
+  <div class="row">${row.item === "2300" ? row.type : ""}</div>
+  <div class="row">${row.item === "3300" ? row.type : ""}</div>
+  <div class="row">${row.item === "2200" ? row.type : ""}</div>
+  <div class="row">${row.item === "3100" ? row.type : ""}</div>
+  <div class="row">${row.item === "2000" ? row.type : ""}</div>
+  <div class="row">${row.item === "3000" ? row.type : ""}</div>
+  <div class="row">${row.item === "filler2" ? row.type : ""}</div>
+  <div class="row">${row.item === "filler3" ? row.type : ""}</div>
+  <div class="row">${row.item === "filler4" ? row.type : ""}</div>
+  <div class="row">${row.item === "filler5" ? row.type : ""}</div>
+  <div class="row">${row.item === "fruitlines" ? row.type : ""}</div>
+  <div class="row">${row.item === "hoses" ? row.type : ""}</div>
+</div>
+`;
+        document.getElementById("grid").appendChild(col);
+      });
     });
-  });
 }
 
 async function addEvent(e) {
@@ -62,6 +91,7 @@ async function addEvent(e) {
 }
 
 document.querySelector("#app").innerHTML = `
+<div id="grid"></div>
 <form name="newevent" id="newevent">
   <label>Item:<select name="item">
     <option value="chiller">Chiller</option>
@@ -95,8 +125,8 @@ document.querySelector("#app").innerHTML = `
 </label>
   <label>Status:
     <select name="status">
-      <option value="scheduled">Scheduled</option>
       <option value="completed">Completed</option>
+      <option value="scheduled">Scheduled</option>
     </select>
   </label>
   <button type="submit">Add Event</button>
