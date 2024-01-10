@@ -17,13 +17,16 @@ async function getData() {
         tr.dataset.id = row[0];
         document.getElementById("data").appendChild(tr);
       });
+      document.getElementById("grid").innerHTML = "";
       res.forEach((row) => {
+        let [date, time] = row.date.split("T");
+        date = date.split("-")[1] + "/" + date.split("-")[2];
         const col = document.createElement("div");
         col.innerHTML = `
 <div>
   <div class="grid-header">
-    <div class="grid-date">${row.date.split("T")[0]}</div>
-    <div class="grid-time">${row.date.split("T")[1]}</div>
+    <div class="row">${date}</div>
+    <div class="row">${time}</div>
   </div>
   <div class="row">${row.item === "chiller" ? row.type : ""}</div>
   <div class="row">${row.item === "2100" ? row.type : ""}</div>
@@ -34,6 +37,7 @@ async function getData() {
   <div class="row">${row.item === "3100" ? row.type : ""}</div>
   <div class="row">${row.item === "2000" ? row.type : ""}</div>
   <div class="row">${row.item === "3000" ? row.type : ""}</div>
+  <div class="row">${row.item === "4000" ? row.type : ""}</div>
   <div class="row">${row.item === "filler2" ? row.type : ""}</div>
   <div class="row">${row.item === "filler3" ? row.type : ""}</div>
   <div class="row">${row.item === "filler4" ? row.type : ""}</div>
@@ -91,7 +95,30 @@ async function addEvent(e) {
 }
 
 document.querySelector("#app").innerHTML = `
-<div id="grid"></div>
+<div class="flex">
+
+  <div id="vert-header">
+    <div class="vheader">Date:</div>
+    <div class="vheader">Time:</div>
+    <div class="vheader">Chiller</div>
+    <div class="vheader">2100</div>
+    <div class="vheader">3200</div>
+    <div class="vheader">2300</div>
+    <div class="vheader">3300</div>
+    <div class="vheader">2200</div>
+    <div class="vheader">3100</div>
+    <div class="vheader">2000</div>
+    <div class="vheader">3000</div>
+    <div class="vheader">4000</div>
+    <div class="vheader">Filler 2</div>
+    <div class="vheader">Filler 3</div>
+    <div class="vheader">Filler 4</div>
+    <div class="vheader">Filler 5</div>
+    <div class="vheader">Fruit Lines</div>
+    <div class="vheader">Hoses</div>
+  </div>
+  <div id="grid"></div>
+</div>
 <form name="newevent" id="newevent">
   <label>Item:<select name="item">
     <option value="chiller">Chiller</option>

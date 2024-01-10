@@ -89,7 +89,6 @@ button:focus-visible {
 
 #grid {
   display: flex;
-  max-width: 100dvw;
   overflow-x: auto;
 }
 
@@ -99,7 +98,13 @@ button:focus-visible {
   padding: 0.2rem;
 }
 
-.row {
+.flex {
+  display: flex;
+  max-width: 100dvw;
+}
+
+.row,
+.vheader {
   height: 2rem;
   border: 1px solid white;
 }
