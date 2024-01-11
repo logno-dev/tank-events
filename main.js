@@ -1,10 +1,42 @@
 import "./style.css";
 import { client } from "./components/client.js";
 
+const items = [
+  "chiller",
+  "2100",
+  "3200",
+  "2300",
+  "3300",
+  "2200",
+  "3100",
+  "2000",
+  "3000",
+  "4000",
+  "filler2",
+  "filler3",
+  "filler4",
+  "filler5",
+  "fruitlines",
+  "hoses",
+];
+
+function createCell(iterator, event) {
+  let eventItems = [];
+  event.events.forEach((e) => eventItems.push(e.item));
+  if (eventItems.includes(iterator)) {
+    return `<div class="row ${event.events.find((e) => e.item === iterator).status
+      } ${event.events.find((e) => e.item === iterator).type}">${event.events.find((e) => e.item === iterator).type
+      }</div>`;
+  } else {
+    return `<div class="row"></div>`;
+  }
+}
+
 async function getData() {
   const data = await client
     .execute("select * from events order by date")
     .then((response) => {
+      const grid = document.getElementById("grid");
       const res = response.rows;
       res.forEach((row) => {
         const tr = document.createElement("tr");
@@ -17,37 +49,50 @@ async function getData() {
         tr.dataset.id = row[0];
         document.getElementById("data").appendChild(tr);
       });
-      document.getElementById("grid").innerHTML = "";
+      let eventObjects = [];
       res.forEach((row) => {
         let [date, time] = row.date.split("T");
         date = date.split("-")[1] + "/" + date.split("-")[2];
+        if (
+          eventObjects[eventObjects.length - 1]?.date === date &&
+          eventObjects[eventObjects.length - 1]?.time === time
+        ) {
+          eventObjects[eventObjects.length - 1].events.push({
+            id: row.id,
+            item: row.item,
+            type: row.type,
+            status: row.status,
+          });
+        } else {
+          eventObjects.push({
+            date: date,
+            time: time,
+            events: [
+              {
+                id: row.id,
+                item: row.item,
+                type: row.type,
+                status: row.status,
+              },
+            ],
+          });
+        }
+      });
+      grid.innerHTML = "";
+      eventObjects.forEach((event) => {
         const col = document.createElement("div");
-        const fill = row.type + "<br/>" + row.status;
         col.innerHTML = `
 <div>
   <div class="grid-header">
-    <div class="row">${date}</div>
-    <div class="row">${time}</div>
+    <div class="grid-date row">${event.date}</div>
+    <div class="grid-time row">${event.time}</div>
   </div>
-  <div class="row">${row.item === "chiller" ? fill : ""}</div>
-  <div class="row">${row.item === "2100" ? fill : ""}</div>
-  <div class="row">${row.item === "3200" ? fill : ""}</div>
-  <div class="row">${row.item === "2300" ? fill : ""}</div>
-  <div class="row">${row.item === "3300" ? fill : ""}</div>
-  <div class="row">${row.item === "2200" ? fill : ""}</div>
-  <div class="row">${row.item === "3100" ? fill : ""}</div>
-  <div class="row">${row.item === "2000" ? fill : ""}</div>
-  <div class="row">${row.item === "3000" ? fill : ""}</div>
-  <div class="row">${row.item === "filler2" ? fill : ""}</div>
-  <div class="row">${row.item === "filler3" ? fill : ""}</div>
-  <div class="row">${row.item === "filler4" ? fill : ""}</div>
-  <div class="row">${row.item === "filler5" ? fill : ""}</div>
-  <div class="row">${row.item === "fruitlines" ? fill : ""}</div>
-  <div class="row">${row.item === "hoses" ? fill : ""}</div>
+  ${items.map((item) => createCell(item, event)).join("")}
 </div>
 `;
-        document.getElementById("grid").appendChild(col);
+        grid.appendChild(col);
       });
+      grid.scrollLeft = grid.scrollWidth;
     });
 }
 
@@ -100,43 +145,13 @@ document.querySelector("#app").innerHTML = `
   <div id="vert-header">
     <div class="vheader">Date:</div>
     <div class="vheader">Time:</div>
-    <div class="vheader">Chiller</div>
-    <div class="vheader">2100</div>
-    <div class="vheader">3200</div>
-    <div class="vheader">2300</div>
-    <div class="vheader">3300</div>
-    <div class="vheader">2200</div>
-    <div class="vheader">3100</div>
-    <div class="vheader">2000</div>
-    <div class="vheader">3000</div>
-    <div class="vheader">4000</div>
-    <div class="vheader">Filler 2</div>
-    <div class="vheader">Filler 3</div>
-    <div class="vheader">Filler 4</div>
-    <div class="vheader">Filler 5</div>
-    <div class="vheader">Fruit Lines</div>
-    <div class="vheader">Hoses</div>
+    ${items.map((item) => `<div class="vheader">${item}</div>`).join("")}
   </div>
   <div id="grid"></div>
 </div>
 <form name="newevent" id="newevent">
   <label>Item:<select name="item">
-    <option value="chiller">Chiller</option>
-    <option value="2100">2100</option>
-    <option value="3200">3200</option>
-    <option value="2300">2300</option>
-    <option value="3300">3300</option>
-    <option value="2200">2200</option>
-    <option value="3100">3100</option>
-    <option value="2000">2000</option>
-    <option value="3000">3000</option>
-    <option value="4000">4000</option>
-    <option value="filler2">Filler 2</option>
-    <option value="filler3">Filler 3</option>
-    <option value="filler4">Filler 4</option>
-    <option value="filler5">Filler 5</option>
-    <option value="fruitlines">Fruit Lines</option>
-    <option value="hoses">Hoses</option>
+    ${items.map((item) => `<option value="${item}">${item}</option>`).join("")}
   </select></label>
   <label>Event:<select name="event">
     <option value="CIP">CIP</option>
