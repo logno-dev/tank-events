@@ -100,7 +100,7 @@ button:focus-visible {
 
 .flex {
   display: flex;
-  max-width: 100dvw;
+  max-width: calc(100dvw - 4rem);
 }
 
 .row,
