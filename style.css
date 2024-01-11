@@ -89,7 +89,7 @@ button:focus-visible {
 
 #grid {
   display: flex;
-  max-width: 100dvw;
+  max-width: calc(100dvw - 4rem);
   overflow-x: auto;
 }
 
@@ -100,7 +100,7 @@ button:focus-visible {
 }
 
 .row {
-  height: 2rem;
+  min-height: 2rem;
   border: 1px solid white;
 }
 

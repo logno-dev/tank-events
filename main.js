@@ -19,27 +19,28 @@ async function getData() {
       });
       res.forEach((row) => {
         const col = document.createElement("div");
+        const fill = row.type + "<br/>" + row.status;
         col.innerHTML = `
 <div>
   <div class="grid-header">
     <div class="grid-date">${row.date.split("T")[0]}</div>
     <div class="grid-time">${row.date.split("T")[1]}</div>
   </div>
-  <div class="row">${row.item === "chiller" ? row.type : ""}</div>
-  <div class="row">${row.item === "2100" ? row.type : ""}</div>
-  <div class="row">${row.item === "3200" ? row.type : ""}</div>
-  <div class="row">${row.item === "2300" ? row.type : ""}</div>
-  <div class="row">${row.item === "3300" ? row.type : ""}</div>
-  <div class="row">${row.item === "2200" ? row.type : ""}</div>
-  <div class="row">${row.item === "3100" ? row.type : ""}</div>
-  <div class="row">${row.item === "2000" ? row.type : ""}</div>
-  <div class="row">${row.item === "3000" ? row.type : ""}</div>
-  <div class="row">${row.item === "filler2" ? row.type : ""}</div>
-  <div class="row">${row.item === "filler3" ? row.type : ""}</div>
-  <div class="row">${row.item === "filler4" ? row.type : ""}</div>
-  <div class="row">${row.item === "filler5" ? row.type : ""}</div>
-  <div class="row">${row.item === "fruitlines" ? row.type : ""}</div>
-  <div class="row">${row.item === "hoses" ? row.type : ""}</div>
+  <div class="row">${row.item === "chiller" ? fill : ""}</div>
+  <div class="row">${row.item === "2100" ? fill : ""}</div>
+  <div class="row">${row.item === "3200" ? fill : ""}</div>
+  <div class="row">${row.item === "2300" ? fill : ""}</div>
+  <div class="row">${row.item === "3300" ? fill : ""}</div>
+  <div class="row">${row.item === "2200" ? fill : ""}</div>
+  <div class="row">${row.item === "3100" ? fill : ""}</div>
+  <div class="row">${row.item === "2000" ? fill : ""}</div>
+  <div class="row">${row.item === "3000" ? fill : ""}</div>
+  <div class="row">${row.item === "filler2" ? fill : ""}</div>
+  <div class="row">${row.item === "filler3" ? fill : ""}</div>
+  <div class="row">${row.item === "filler4" ? fill : ""}</div>
+  <div class="row">${row.item === "filler5" ? fill : ""}</div>
+  <div class="row">${row.item === "fruitlines" ? fill : ""}</div>
+  <div class="row">${row.item === "hoses" ? fill : ""}</div>
 </div>
 `;
         document.getElementById("grid").appendChild(col);
