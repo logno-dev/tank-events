@@ -141,3 +141,7 @@ td {
   border: 1px solid gray;
   padding: 0.2rem;
 }
+
+#time {
+  width: 4ch;
+}

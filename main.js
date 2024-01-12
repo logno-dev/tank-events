@@ -20,6 +20,49 @@ const items = [
   "hoses",
 ];
 
+function toggleEditable(e) {
+  const row = e.target.parentNode.parentNode;
+  const id = row.dataset.id;
+  const item = row.querySelector(".item").innerText;
+  const type = row.querySelector(".type").innerText;
+  const date = row.querySelector(".date").innerText;
+  const status = row.querySelector(".status").innerText;
+  console.log(row);
+
+  row.innerHTML = `
+<td colspan="5">
+  <form name="editevent" class="editevent-form">
+  <input type="hidden" name="id" value="${id}">
+  <select name="item" class="item"">
+    ${items
+      .map(
+        (i) =>
+          `<option value="${i}" ${item === i ? "selected" : ""}>${i}</option>`,
+      )
+      .join("")}
+    </select>
+  <select name="type" class="type">
+    <option value="CIP" ${type === "CIP" ? "selected" : ""}>CIP</option>
+    <option value="SB" ${type === "SB" ? "selected" : ""}>SB Bio</option>
+    <option value="VEGE" ${type === "VEGE" ? "selected" : ""}>VEGE</option>
+    <option value="ESL" ${type === "ESL" ? "selected" : ""}>ESL</option>
+  </select>
+  <input type="text" name="date" value="${date}">
+  <select name="status" class="status" value="${status}">
+    <option value="completed" ${status === "completed" ? "selected" : ""
+    }>Completed</option>
+    <option value="scheduled" ${status === "scheduled" ? "selected" : ""
+    }>Scheduled</option>
+  </select>
+  <button type="submit">Save</button>
+    </form>
+</td>
+`;
+  document
+    .querySelector(".editevent-form")
+    .addEventListener("submit", editEvent);
+}
+
 function createCell(iterator, event) {
   let eventItems = [];
   const evenOdd = Number(event.date.split("/")[1]) % 2 === 0 ? "even" : "odd";
@@ -42,11 +85,15 @@ async function getData() {
       const revRes = [...res].reverse();
       res.forEach((row) => {
         const tr = document.createElement("tr");
+        tr.setAttribute("id", row[0]);
+        tr.dataset.id = row[0];
+        tr.classList.add("table-data");
         tr.innerHTML = `
-<td>${row[1]}</td>
-<td>${row[2]}</td>
-<td>${row[3]}</td>
-<td>${row[4]}</td>
+<td class="item">${row[1]}</td>
+<td class="type">${row[2]}</td>
+<td class="date">${row[3]}</td>
+<td class="status">${row[4]}</td>
+<td><button type="button" class="edit-button">edit</button></td>
 `;
         tr.dataset.id = row[0];
         document.getElementById("data").appendChild(tr);
@@ -97,6 +144,9 @@ async function getData() {
         grid.appendChild(col);
       });
       grid.scrollLeft = grid.scrollWidth;
+      document.querySelectorAll(".edit-button").forEach((button) => {
+        button.addEventListener("click", toggleEditable);
+      });
     });
 }
 
@@ -111,7 +161,7 @@ async function addEvent(e) {
   const time = formData.get("time");
   const status = formData.get("status");
 
-  const formattedDate = date + "T" + time;
+  const formattedDate = date + "T" + time.padStart(2, "0") + ":00:00";
 
   try {
     client
@@ -143,6 +193,35 @@ async function addEvent(e) {
   }
 }
 
+function editEvent(e) {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const id = formData.get("id");
+  const item = formData.get("item");
+  const type = formData.get("type");
+  const date = formData.get("date");
+  const status = formData.get("status");
+
+  try {
+    client
+      .execute({
+        sql: "update events set item = :item, type = :type, date = :date, status = :status where id = :id",
+        args: {
+          id: Number(id),
+          item: item,
+          type: type,
+          date: date,
+          status: status,
+        },
+      })
+      .then((res) => console.log(res));
+    document.getElementById("data").innerHTML = "";
+    getData();
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 document.querySelector("#app").innerHTML = `
 <div class="flex">
 
@@ -167,7 +246,7 @@ document.querySelector("#app").innerHTML = `
     <input type="date" id="today" name="date">
   </label>
   <label>Time:
-    <input type="time" name="time" value="12:00:00">
+    <input type="number" data-maxlength="2" min="0" max="24" oninput="this.value=this.value.slice(0, this.dataset.maxlength)" name="time" id="time" value="00">
 </label>
   <label>Status:
     <select name="status">
@@ -183,6 +262,8 @@ document.querySelector("#app").innerHTML = `
 </div>
 `;
 getData();
+
+window.addEventListener("load", getData);
 
 document.getElementById("today").valueAsDate = new Date();
 document.getElementById("newevent").addEventListener("submit", addEvent);
