@@ -86,6 +86,10 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+.odd {
+  background-color: #ccc;
+}
+
 #grid {
   display: flex;
   overflow-x: auto;
@@ -98,7 +102,8 @@ button:focus-visible {
 
 .flex {
   display: flex;
-  max-width: calc(100dvw - 4rem);
+  max-width: calc(100dvw - 8rem);
+  justify-content: center;
 }
 
 .row,
@@ -126,4 +131,13 @@ button:focus-visible {
 
 .scheduled {
   opacity: 0.6;
+}
+
+#data {
+  border-collapse: collapse;
+}
+
+td {
+  border: 1px solid gray;
+  padding: 0.2rem;
 }

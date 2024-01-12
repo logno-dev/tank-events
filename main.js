@@ -22,22 +22,24 @@ const items = [
 
 function createCell(iterator, event) {
   let eventItems = [];
+  const evenOdd = Number(event.date.split("/")[1]) % 2 === 0 ? "even" : "odd";
   event.events.forEach((e) => eventItems.push(e.item));
   if (eventItems.includes(iterator)) {
     return `<div class="row ${event.events.find((e) => e.item === iterator).status
-      } ${event.events.find((e) => e.item === iterator).type}">${event.events.find((e) => e.item === iterator).type
+      } ${event.events.find((e) => e.item === iterator).type} ${evenOdd}">${event.events.find((e) => e.item === iterator).type
       }</div>`;
   } else {
-    return `<div class="row"></div>`;
+    return `<div class="row ${evenOdd}"></div>`;
   }
 }
 
 async function getData() {
   const data = await client
-    .execute("select * from events order by date")
+    .execute("select * from events order by date desc")
     .then((response) => {
       const grid = document.getElementById("grid");
       const res = response.rows;
+      const revRes = [...res].reverse();
       res.forEach((row) => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
@@ -50,7 +52,7 @@ async function getData() {
         document.getElementById("data").appendChild(tr);
       });
       let eventObjects = [];
-      res.forEach((row) => {
+      revRes.forEach((row) => {
         let [date, time] = row.date.split("T");
         date = date.split("-")[1] + "/" + date.split("-")[2];
         if (
@@ -80,12 +82,14 @@ async function getData() {
       });
       grid.innerHTML = "";
       eventObjects.forEach((event) => {
+        const evenOdd =
+          Number(event.date.split("/")[1]) % 2 === 0 ? "even" : "odd";
         const col = document.createElement("div");
         col.innerHTML = `
 <div>
   <div class="grid-header">
-    <div class="grid-date row">${event.date}</div>
-    <div class="grid-time row">${event.time}</div>
+    <div class="grid-date row ${evenOdd}">${event.date}</div>
+    <div class="grid-time row ${evenOdd}">${event.time}</div>
   </div>
   ${items.map((item) => createCell(item, event)).join("")}
 </div>
@@ -173,8 +177,10 @@ document.querySelector("#app").innerHTML = `
   </label>
   <button type="submit">Add Event</button>
 </form>
+<div class="flex">
   <table id="data">
   </table>
+</div>
 `;
 getData();
 
