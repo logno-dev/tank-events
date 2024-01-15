@@ -27,7 +27,6 @@ function toggleEditable(e) {
   const type = row.querySelector(".type").innerText;
   const date = row.querySelector(".date").innerText;
   const status = row.querySelector(".status").innerText;
-  console.log(row);
 
   row.innerHTML = `
 <td colspan="5">
@@ -63,14 +62,38 @@ function toggleEditable(e) {
     .addEventListener("submit", editEvent);
 }
 
+function loadModal(e) {
+  const id = e.target.dataset.id;
+  const item = e.target.dataset.item;
+  const type = e.target.dataset.type;
+  const date = e.target.dataset.date;
+  const status = e.target.dataset.status;
+
+  const modalForm = document.getElementById("modal-form");
+  modalForm.querySelector(".modal-id").value = id;
+  modalForm.querySelector(".modal-item").value = item;
+  modalForm.querySelector(".modal-type").value = type;
+  modalForm.querySelector(".modal-date").value = date;
+  modalForm.querySelector(".modal-status").value = status;
+  //
+  document.querySelectorAll(".modal").forEach((el) => {
+    el.style.visibility = "visible";
+  });
+}
+
 function createCell(iterator, event) {
   let eventItems = [];
   const evenOdd = Number(event.date.split("/")[1]) % 2 === 0 ? "even" : "odd";
   event.events.forEach((e) => eventItems.push(e.item));
   if (eventItems.includes(iterator)) {
-    return `<div class="row ${event.events.find((e) => e.item === iterator).status
-      } ${event.events.find((e) => e.item === iterator).type} ${evenOdd}">${event.events.find((e) => e.item === iterator).type
-      }</div>`;
+    const eventDetails = event.events.find((e) => e.item === iterator);
+    return `<div class="row event-marker ${eventDetails.status} ${eventDetails.type} ${evenOdd}"
+data-id="${eventDetails.id}"
+data-item="${eventDetails.item}"
+data-type="${eventDetails.type}"
+data-date="${eventDetails.date}"
+data-status="${eventDetails.status}"
+>${eventDetails.type}</div>`;
   } else {
     return `<div class="row ${evenOdd}"></div>`;
   }
@@ -78,7 +101,7 @@ function createCell(iterator, event) {
 
 async function getData() {
   const data = await client
-    .execute("select * from events order by date desc")
+    .execute("select * from events order by date desc limit 100")
     .then((response) => {
       const grid = document.getElementById("grid");
       const res = response.rows;
@@ -121,6 +144,7 @@ async function getData() {
                 id: row.id,
                 item: row.item,
                 type: row.type,
+                date: row.date,
                 status: row.status,
               },
             ],
@@ -147,6 +171,13 @@ async function getData() {
       document.querySelectorAll(".edit-button").forEach((button) => {
         button.addEventListener("click", toggleEditable);
       });
+
+      document.querySelectorAll(".event-marker").forEach((el) => {
+        el.addEventListener("click", (e) => loadModal(e));
+      });
+      document
+        .querySelector(".editevent-form")
+        .addEventListener("submit", editEvent);
     });
 }
 
@@ -214,9 +245,14 @@ function editEvent(e) {
           status: status,
         },
       })
-      .then((res) => console.log(res));
-    document.getElementById("data").innerHTML = "";
-    getData();
+      .then((res) => {
+        console.log(res);
+        document.getElementById("data").innerHTML = "";
+        getData();
+        document.querySelectorAll(".modal").forEach((el) => {
+          el.style.visibility = "hidden";
+        });
+      });
   } catch (err) {
     console.log(err);
   }
@@ -256,9 +292,31 @@ document.querySelector("#app").innerHTML = `
   </label>
   <button type="submit">Add Event</button>
 </form>
-<div class="flex">
+<div class="flex data-table">
   <table id="data">
   </table>
+</div>
+<div class="modal-backdrop modal">
+  <div class="modal-window modal">
+  <form name="editevent" class="editevent-form" id="modal-form">
+  <input type="hidden" name="id" class="modal-id">
+  <select name="item" class="modal-item" >
+    ${items.map((i) => `<option value="${i}">${i}</option>`).join("")}
+    </select>
+  <select name="type" class="modal-type">
+    <option value="CIP">CIP</option>
+    <option value="SB">SB Bio</option>
+    <option value="VEGE">VEGE</option>
+    <option value="ESL">ESL</option>
+  </select>
+  <input type="text" name="date" class="modal-date">
+  <select name="status" class="modal-status">
+    <option value="completed">Completed</option>
+    <option value="scheduled">Scheduled</option>
+  </select>
+  <button type="submit">Save</button>
+    </form>
+  </div>
 </div>
 `;
 getData();
@@ -267,3 +325,10 @@ window.addEventListener("load", getData);
 
 document.getElementById("today").valueAsDate = new Date();
 document.getElementById("newevent").addEventListener("submit", addEvent);
+const modalBack = document.querySelector(".modal-backdrop");
+modalBack.addEventListener("click", (event) => {
+  if (modalBack !== event.target) return;
+  document.querySelectorAll(".modal").forEach((el) => {
+    el.style.visibility = "hidden";
+  });
+});

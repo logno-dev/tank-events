@@ -137,6 +137,11 @@ button:focus-visible {
   border-collapse: collapse;
 }
 
+.data-table {
+  height: 400px;
+  overflow-y: scroll;
+}
+
 td {
   border: 1px solid gray;
   padding: 0.2rem;
@@ -144,4 +149,36 @@ td {
 
 #time {
   width: 4ch;
+}
+
+.modal-backdrop {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100dvw;
+  height: 100dvh;
+  background-color: rgba(0, 0, 0, 0.4);
+  place-items: center;
+  place-content: center;
+}
+
+.modal-window {
+  padding: 2rem;
+  background-color: #e0e0e0;
+  border: 2px solid black;
+  border-radius: 14px;
+  z-index: 99;
+}
+
+.modal {
+  visibility: hidden;
+}
+
+.event-marker {
+  cursor: pointer;
+}
+
+.event-marker:hover {
+  border-color: blue;
 }
