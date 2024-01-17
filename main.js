@@ -81,32 +81,43 @@ function loadModal(e) {
   });
 }
 
-function createCell(iterator, event, date) {
-  const exists = event.contains((e) => {
-    e.date.split("T")[0].split("-")[1] +
-      "/" +
-      e.date.split("T")[0].split("-")[2] ===
-      date;
-  });
-  console.log(exists);
-  //   event.forEach((e) => {
-  //     let itemDate =
-  //       e.date.split("T")[0].split("-")[1] +
-  //       "/" +
-  //       e.date.split("T")[0].split("-")[2];
-  //     const evenOdd = Number(date.split("/")[1]) % 2 === 0 ? "even" : "odd";
-  //     if (itemDate === date && e.item === iterator) {
-  //       return `<div class="row event-marker ${e.status} ${e.type} ${evenOdd}"
-  // data-id="${e.id}"
-  // data-item="${e.item}"
-  // data-type="${e.type}"
-  // data-date="${e.date}"
-  // data-status="${e.status}"
-  // >${e.type}</div>`;
-  //     } else {
-  //     }
-  //     return `<div class="row ${evenOdd}"></div>`;
-  //   });
+function createCell(iterator, event, date, time1, time2) {
+  const formatDate = date.replace("/", "-");
+  const objectArr = event.filter((e) => e.date.includes(formatDate));
+  const objectIndex = objectArr.findIndex((e) => e.item.includes(iterator));
+  const evenOdd = Number(date.split("/")[1]) % 2 === 0 ? "even" : "odd";
+  const e = objectArr[objectIndex];
+  if (!e) {
+    return `<div class="row ${evenOdd} event-marker"
+  data-id=""
+  data-item="${iterator}"
+  data-date="${new Date().getFullYear() + "-" + formatDate + "T" + time1 + ":00:00:00Z"
+      }"
+></div>`;
+  }
+  const hour = e.date.split("T")[1].split(":")[0];
+  if (
+    objectIndex !== -1 &&
+    e.item === iterator &&
+    hour >= time1 &&
+    hour < time2
+  ) {
+    return `<div class="row event-marker ${e.status} ${e.type} ${evenOdd}"
+  data-id="${e.id}"
+  data-item="${e.item}"
+  data-type="${e.type}"
+  data-date="${e.date}"
+  data-status="${e.status}"
+  >${e.type}</div>`;
+  } else {
+    return `<div class="row ${evenOdd} event-marker"
+  data-id="${e.id}"
+  data-item="${e.item}"
+  data-type="${e.type}"
+  data-date="${e.date}"
+  data-status="${e.status}"
+></div>`;
+  }
 }
 
 async function getData() {
@@ -178,8 +189,15 @@ async function getData() {
       // `;
       //         grid.appendChild(col);
       //       });
+      const paramDate = new URL(window.location).searchParams.get("date");
+      if (paramDate) {
+        document.getElementById("dateselect").valueAsDate = new Date(paramDate);
+      } else {
+        document.getElementById("dateselect").valueAsDate = new Date();
+      }
+      const selectDate = new Date(document.getElementById("dateselect").value);
       const sunday = new Date(
-        new Date().setDate(new Date().getDate() - new Date().getDay()),
+        selectDate.setDate(new Date().getDate() - new Date().getDay()),
       );
       for (let i = 0; i < 8; i++) {
         let dayOfWeek = new Date(new Date().setDate(sunday.getDate() + i));
@@ -195,7 +213,7 @@ async function getData() {
         <div class="hourheader row">0-6</div>
           ${items
             .map((item) => {
-              createCell(item, res, monthDay);
+              return createCell(item, res, monthDay, 0, 7);
             })
             .join("")}
       </div>
@@ -203,7 +221,7 @@ async function getData() {
         <div class="hourheader row">7-12</div>
           ${items
             .map((item) => {
-              createCell(item, res, monthDay);
+              return createCell(item, res, monthDay, 7, 13);
             })
             .join("")}
       </div>
@@ -211,7 +229,7 @@ async function getData() {
         <div class="hourheader row">13-18</div>
           ${items
             .map((item) => {
-              createCell(item, res, monthDay);
+              return createCell(item, res, monthDay, 13, 19);
             })
             .join("")}
       </div>
@@ -219,7 +237,7 @@ async function getData() {
         <div class="hourheader row">19-24</div>
           ${items
             .map((item) => {
-              createCell(item, res, monthDay);
+              return createCell(item, res, monthDay, 19, 25);
             })
             .join("")}
       </div>
@@ -239,22 +257,29 @@ async function getData() {
       });
       document
         .querySelector(".editevent-form")
-        .addEventListener("submit", editEvent);
+        .addEventListener("submit", (e) => {
+          if (!new FormData(e.target).get("id")) {
+            addEvent(e);
+          } else {
+            editEvent(e);
+          }
+        });
     });
 }
 
 async function addEvent(e) {
   e.preventDefault();
   const formData = new FormData(e.target);
-
   let id;
   const item = formData.get("item");
-  const event = formData.get("event");
+  const event = formData.get("type");
   const date = formData.get("date");
-  const time = formData.get("time");
+  const time = formData.get("time") || "";
   const status = formData.get("status");
 
-  const formattedDate = date + "T" + time.padStart(2, "0") + ":00:00";
+  const formattedDate = date.includes("T")
+    ? date
+    : date + "T" + time.padStart(2, "0") + ":00:00";
 
   try {
     client
@@ -274,9 +299,14 @@ async function addEvent(e) {
                 status: status,
               },
             })
-            .then((res) => console.log(res));
-          document.getElementById("data").innerHTML = "";
-          getData();
+            .then((res) => {
+              console.log(res);
+              document.getElementById("data").innerHTML = "";
+              getData();
+              document.querySelectorAll(".modal").forEach((el) => {
+                el.style.visibility = "hidden";
+              });
+            });
         } catch (err) {
           console.log(err);
         }
@@ -322,6 +352,11 @@ function editEvent(e) {
 
 document.querySelector("#app").innerHTML = `
 <div class="flex">
+  <label>Select Date:
+    <input type="date" id="dateselect">
+  </label>
+</div>
+<div class="flex">
 
   <div id="vert-header">
     <div class="vheader">Date:</div>
@@ -334,7 +369,7 @@ document.querySelector("#app").innerHTML = `
   <label>Item:<select name="item">
     ${items.map((item) => `<option value="${item}">${item}</option>`).join("")}
   </select></label>
-  <label>Event:<select name="event">
+  <label>Event:<select name="type">
     <option value="CIP">CIP</option>
     <option value="SB">SB Bio</option>
     <option value="VEGE">VEGE</option>
@@ -392,4 +427,8 @@ modalBack.addEventListener("click", (event) => {
   document.querySelectorAll(".modal").forEach((el) => {
     el.style.visibility = "hidden";
   });
+});
+
+document.getElementById("dateselect").addEventListener("change", (e) => {
+  window.location.href = window.location.origin + "?date=" + e.target.value;
 });
