@@ -109,7 +109,7 @@ button:focus-visible {
 .row,
 .vheader {
   height: 1.6rem;
-  min-width: fit-content;
+  min-width: 4rem;
   border: 1px solid black;
 }
 
@@ -181,4 +181,8 @@ td {
 
 .event-marker:hover {
   border-color: blue;
+}
+
+.hourwrapper {
+  display: flex;
 }

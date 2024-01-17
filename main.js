@@ -81,22 +81,24 @@ function loadModal(e) {
   });
 }
 
-function createCell(iterator, event) {
-  let eventItems = [];
-  const evenOdd = Number(event.date.split("/")[1]) % 2 === 0 ? "even" : "odd";
-  event.events.forEach((e) => eventItems.push(e.item));
-  if (eventItems.includes(iterator)) {
-    const eventDetails = event.events.find((e) => e.item === iterator);
-    return `<div class="row event-marker ${eventDetails.status} ${eventDetails.type} ${evenOdd}"
+function createCell(iterator, event, date) {
+  event.forEach((e) => {
+    const evenOdd = Number(e.date.split("/")[1]) % 2 === 0 ? "even" : "odd";
+    if (e.date === date) {
+      if (event.events.includes(iterator)) {
+        const eventDetails = event.events.find((e) => e.item === iterator);
+        return `<div class="row event-marker ${eventDetails.status} ${eventDetails.type} ${evenOdd}"
 data-id="${eventDetails.id}"
 data-item="${eventDetails.item}"
 data-type="${eventDetails.type}"
 data-date="${eventDetails.date}"
 data-status="${eventDetails.status}"
 >${eventDetails.type}</div>`;
-  } else {
-    return `<div class="row ${evenOdd}"></div>`;
-  }
+      } else {
+        return `<div class="row ${evenOdd}"></div>`;
+      }
+    }
+  });
 }
 
 async function getData() {
@@ -151,22 +153,74 @@ async function getData() {
           });
         }
       });
+      console.log(eventObjects);
       grid.innerHTML = "";
-      eventObjects.forEach((event) => {
-        const evenOdd =
-          Number(event.date.split("/")[1]) % 2 === 0 ? "even" : "odd";
-        const col = document.createElement("div");
-        col.innerHTML = `
-<div>
-  <div class="grid-header">
-    <div class="grid-date row ${evenOdd}">${event.date}</div>
-    <div class="grid-time row ${evenOdd}">${event.time}</div>
+      //       eventObjects.forEach((event) => {
+      //         const evenOdd =
+      //           Number(event.date.split("/")[1]) % 2 === 0 ? "even" : "odd";
+      //         const col = document.createElement("div");
+      //         col.innerHTML = `
+      // <div>
+      //   <div class="grid-header">
+      //     <div class="grid-date row ${evenOdd}">${event.date}</div>
+      //     <div class="grid-time row ${evenOdd}">${event.time}</div>
+      //   </div>
+      //   ${items.map((item) => createCell(item, event)).join("")}
+      // </div>
+      // `;
+      //         grid.appendChild(col);
+      //       });
+      const sunday = new Date(
+        new Date().setDate(new Date().getDate() - new Date().getDay()),
+      );
+      for (let i = 0; i < 8; i++) {
+        let dayOfWeek = new Date(new Date().setDate(sunday.getDate() + i));
+        let monthDay =
+          String(dayOfWeek.getMonth() + 1).padStart(2, "0") +
+          "/" +
+          String(dayOfWeek.getDate()).padStart(2, "0");
+        grid.innerHTML += `
+<div class="daycol">
+  <div class="dayheader row">${monthDay}</div>
+    <div class="hourwrapper">
+      <div class="hourcol">
+        <div class="hourheader row">0-6</div>
+          ${items
+            .map((item) => {
+              createCell(item, eventObjects);
+            })
+            .join("")}
+      </div>
+      <div class="hourcol">
+        <div class="hourheader row">7-12</div>
+          ${items
+            .map((item) => {
+              createCell(item, eventObjects);
+            })
+            .join("")}
+      </div>
+      <div class="hourcol">
+        <div class="hourheader row">13-18</div>
+          ${items
+            .map((item) => {
+              createCell(item, eventObjects);
+            })
+            .join("")}
+      </div>
+      <div class="hourcol">
+        <div class="hourheader row">19-24</div>
+          ${items
+            .map((item) => {
+              createCell(item, eventObjects);
+            })
+            .join("")}
+      </div>
+    </div>
   </div>
-  ${items.map((item) => createCell(item, event)).join("")}
 </div>
 `;
-        grid.appendChild(col);
-      });
+        // grid.innerHTML += dayOfWeek.toLocaleString();
+      }
       grid.scrollLeft = grid.scrollWidth;
       document.querySelectorAll(".edit-button").forEach((button) => {
         button.addEventListener("click", toggleEditable);
@@ -319,7 +373,6 @@ document.querySelector("#app").innerHTML = `
   </div>
 </div>
 `;
-getData();
 
 window.addEventListener("load", getData);
 
