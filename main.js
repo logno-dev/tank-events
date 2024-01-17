@@ -82,23 +82,31 @@ function loadModal(e) {
 }
 
 function createCell(iterator, event, date) {
-  event.forEach((e) => {
-    const evenOdd = Number(e.date.split("/")[1]) % 2 === 0 ? "even" : "odd";
-    if (e.date === date) {
-      if (event.events.includes(iterator)) {
-        const eventDetails = event.events.find((e) => e.item === iterator);
-        return `<div class="row event-marker ${eventDetails.status} ${eventDetails.type} ${evenOdd}"
-data-id="${eventDetails.id}"
-data-item="${eventDetails.item}"
-data-type="${eventDetails.type}"
-data-date="${eventDetails.date}"
-data-status="${eventDetails.status}"
->${eventDetails.type}</div>`;
-      } else {
-        return `<div class="row ${evenOdd}"></div>`;
-      }
-    }
+  const exists = event.contains((e) => {
+    e.date.split("T")[0].split("-")[1] +
+      "/" +
+      e.date.split("T")[0].split("-")[2] ===
+      date;
   });
+  console.log(exists);
+  //   event.forEach((e) => {
+  //     let itemDate =
+  //       e.date.split("T")[0].split("-")[1] +
+  //       "/" +
+  //       e.date.split("T")[0].split("-")[2];
+  //     const evenOdd = Number(date.split("/")[1]) % 2 === 0 ? "even" : "odd";
+  //     if (itemDate === date && e.item === iterator) {
+  //       return `<div class="row event-marker ${e.status} ${e.type} ${evenOdd}"
+  // data-id="${e.id}"
+  // data-item="${e.item}"
+  // data-type="${e.type}"
+  // data-date="${e.date}"
+  // data-status="${e.status}"
+  // >${e.type}</div>`;
+  //     } else {
+  //     }
+  //     return `<div class="row ${evenOdd}"></div>`;
+  //   });
 }
 
 async function getData() {
@@ -107,6 +115,7 @@ async function getData() {
     .then((response) => {
       const grid = document.getElementById("grid");
       const res = response.rows;
+      console.log(res);
       const revRes = [...res].reverse();
       res.forEach((row) => {
         const tr = document.createElement("tr");
@@ -153,7 +162,6 @@ async function getData() {
           });
         }
       });
-      console.log(eventObjects);
       grid.innerHTML = "";
       //       eventObjects.forEach((event) => {
       //         const evenOdd =
@@ -187,7 +195,7 @@ async function getData() {
         <div class="hourheader row">0-6</div>
           ${items
             .map((item) => {
-              createCell(item, eventObjects);
+              createCell(item, res, monthDay);
             })
             .join("")}
       </div>
@@ -195,7 +203,7 @@ async function getData() {
         <div class="hourheader row">7-12</div>
           ${items
             .map((item) => {
-              createCell(item, eventObjects);
+              createCell(item, res, monthDay);
             })
             .join("")}
       </div>
@@ -203,7 +211,7 @@ async function getData() {
         <div class="hourheader row">13-18</div>
           ${items
             .map((item) => {
-              createCell(item, eventObjects);
+              createCell(item, res, monthDay);
             })
             .join("")}
       </div>
@@ -211,7 +219,7 @@ async function getData() {
         <div class="hourheader row">19-24</div>
           ${items
             .map((item) => {
-              createCell(item, eventObjects);
+              createCell(item, res, monthDay);
             })
             .join("")}
       </div>
