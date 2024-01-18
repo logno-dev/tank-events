@@ -57,9 +57,9 @@ function toggleEditable(e) {
     </form>
 </td>
 `;
-  document
-    .querySelector(".editevent-form")
-    .addEventListener("submit", editEvent);
+  // document
+  //   .querySelector(".editevent-form")
+  //   .addEventListener("submit", editEvent);
 }
 
 function loadModal(e) {
@@ -90,12 +90,15 @@ function createCell(iterator, event, date, time1, time2) {
   });
   const evenOdd = Number(date.split("/")[1]) % 2 === 0 ? "even" : "odd";
   if (reducedArr.length === 0) {
-    return `<div class="row ${evenOdd} event-marker"
+    return `<div class="row ${evenOdd}">
+<div class="dot add event-marker"
   data-id=""
   data-item="${iterator}"
   data-date="${new Date().getFullYear() + "-" + formatDate + "T" + time1 + ":00:00:00Z"
       }"
-></div>`;
+>+</div>
+
+</div>`;
   }
   reducedArr.sort((a, b) => {
     let timea = a.date.split("T")[1].split(":")[0];
@@ -122,6 +125,12 @@ data-status="${e.status}"
 `;
       })
       .join("")}
+<div class="dot add event-marker"
+data-id=""
+data-item="${iterator}"
+data-date="${new Date().getFullYear() + "-" + formatDate + "T" + time1 + ":00:00:00Z"
+      }"
+>+</div>
 </div >
       `;
 }
@@ -133,7 +142,6 @@ async function getData() {
       const grid = document.getElementById("grid");
       const res = response.rows;
       console.log(res);
-      const revRes = [...res].reverse();
       res.forEach((row) => {
         const tr = document.createElement("tr");
         tr.setAttribute("id", row[0]);
@@ -149,52 +157,7 @@ async function getData() {
         tr.dataset.id = row[0];
         document.getElementById("data").appendChild(tr);
       });
-      let eventObjects = [];
-      revRes.forEach((row) => {
-        let [date, time] = row.date.split("T");
-        date = date.split("-")[1] + "/" + date.split("-")[2];
-        if (
-          eventObjects[eventObjects.length - 1]?.date === date &&
-          eventObjects[eventObjects.length - 1]?.time === time
-        ) {
-          eventObjects[eventObjects.length - 1].events.push({
-            id: row.id,
-            item: row.item,
-            type: row.type,
-            status: row.status,
-          });
-        } else {
-          eventObjects.push({
-            date: date,
-            time: time,
-            events: [
-              {
-                id: row.id,
-                item: row.item,
-                type: row.type,
-                date: row.date,
-                status: row.status,
-              },
-            ],
-          });
-        }
-      });
       grid.innerHTML = "";
-      //       eventObjects.forEach((event) => {
-      //         const evenOdd =
-      //           Number(event.date.split("/")[1]) % 2 === 0 ? "even" : "odd";
-      //         const col = document.createElement("div");
-      //         col.innerHTML = `
-      // <div>
-      //   <div class="grid-header">
-      //     <div class="grid-date row ${evenOdd}">${event.date}</div>
-      //     <div class="grid-time row ${evenOdd}">${event.time}</div>
-      //   </div>
-      //   ${items.map((item) => createCell(item, event)).join("")}
-      // </div>
-      // `;
-      //         grid.appendChild(col);
-      //       });
       const paramDate = new URL(window.location).searchParams.get("date");
       if (paramDate) {
         document.getElementById("dateselect").valueAsDate = new Date(paramDate);
@@ -203,9 +166,9 @@ async function getData() {
       }
       const selectDate = new Date(document.getElementById("dateselect").value);
       const sunday = new Date(
-        selectDate.setDate(selectDate.getDate() - (selectDate.getDay() + 3)),
+        selectDate.setDate(selectDate.getDate() - (selectDate.getDay() + 2)),
       );
-      for (let i = 0; i < 14; i++) {
+      for (let i = 0; i < 12; i++) {
         let dayOfWeek = new Date(new Date().setDate(sunday.getDate() + i));
         let monthDay =
           String(dayOfWeek.getMonth() + 1).padStart(2, "0") +
@@ -261,15 +224,6 @@ async function getData() {
       document.querySelectorAll(".event-marker").forEach((el) => {
         el.addEventListener("click", (e) => loadModal(e));
       });
-      document
-        .querySelector(".editevent-form")
-        .addEventListener("submit", (e) => {
-          if (!new FormData(e.target).get("id")) {
-            addEvent(e);
-          } else {
-            editEvent(e);
-          }
-        });
     });
 }
 
@@ -434,6 +388,16 @@ modalBack.addEventListener("click", (event) => {
     el.style.visibility = "hidden";
   });
 });
+
+document
+  .querySelector(".editevent-form")
+  .addEventListener("submit", (e) => {
+    if (!new FormData(e.target).get("id")) {
+      addEvent(e);
+    } else {
+      editEvent(e);
+    }
+  });
 
 document.getElementById("dateselect").addEventListener("change", (e) => {
   window.location.href = window.location.origin + "?date=" + e.target.value;
