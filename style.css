@@ -113,6 +113,25 @@ button:focus-visible {
   border: 1px solid black;
 }
 
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  place-items: center;
+  place-content: center;
+}
+
+.dot {
+  display: flex;
+  place-items: center;
+  place-content: center;
+  --dot-size: 18px;
+  height: var(--dot-size);
+  width: var(--dot-size);
+  border-radius: 50%;
+  font-size: 8px;
+  border: 1px solid rgba(0, 0, 0, 0);
+}
+
 .vheader {
   font-size: 0.6rem;
 }
@@ -127,6 +146,10 @@ button:focus-visible {
 
 .VEGE {
   background-color: #e0b0b0;
+}
+
+.ESL {
+  background-color: lightcyan;
 }
 
 .scheduled {

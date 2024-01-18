@@ -84,10 +84,12 @@ function loadModal(e) {
 function createCell(iterator, event, date, time1, time2) {
   const formatDate = date.replace("/", "-");
   const objectArr = event.filter((e) => e.date.includes(formatDate));
-  const objectIndex = objectArr.findIndex((e) => e.item.includes(iterator));
+  const reducedArr = objectArr.filter((e) => {
+    let time = e.date.split("T")[1].split(":")[0];
+    return e.item.includes(iterator) && time >= time1 && time < time2;
+  });
   const evenOdd = Number(date.split("/")[1]) % 2 === 0 ? "even" : "odd";
-  const e = objectArr[objectIndex];
-  if (!e) {
+  if (reducedArr.length === 0) {
     return `<div class="row ${evenOdd} event-marker"
   data-id=""
   data-item="${iterator}"
@@ -95,29 +97,33 @@ function createCell(iterator, event, date, time1, time2) {
       }"
 ></div>`;
   }
-  const hour = e.date.split("T")[1].split(":")[0];
-  if (
-    objectIndex !== -1 &&
-    e.item === iterator &&
-    hour >= time1 &&
-    hour < time2
-  ) {
-    return `<div class="row event-marker ${e.status} ${e.type} ${evenOdd}"
-  data-id="${e.id}"
-  data-item="${e.item}"
-  data-type="${e.type}"
-  data-date="${e.date}"
-  data-status="${e.status}"
-  >${e.type}</div>`;
-  } else {
-    return `<div class="row ${evenOdd} event-marker"
-  data-id="${e.id}"
-  data-item="${e.item}"
-  data-type="${e.type}"
-  data-date="${e.date}"
-  data-status="${e.status}"
-></div>`;
-  }
+  reducedArr.sort((a, b) => {
+    let timea = a.date.split("T")[1].split(":")[0];
+    let timeb = b.date.split("T")[1].split(":")[0];
+    if (timea < timeb) {
+      return -1;
+    } else if (timea > timeb) {
+      return 1;
+    }
+    return 0;
+  });
+  return `
+<div class="row ${evenOdd}">
+${reducedArr
+      .map((e) => {
+        return `
+<div class="dot event-marker ${e.status} ${e.type}"
+data-id="${e.id}"
+data-item="${e.item}"
+data-type="${e.type}"
+data-date="${e.date}"
+data-status="${e.status}"
+>${e.type}</div>
+`;
+      })
+      .join("")}
+</div >
+      `;
 }
 
 async function getData() {
@@ -134,12 +140,12 @@ async function getData() {
         tr.dataset.id = row[0];
         tr.classList.add("table-data");
         tr.innerHTML = `
-<td class="item">${row[1]}</td>
+      <td class="item">${row[1]}</td >
 <td class="type">${row[2]}</td>
 <td class="date">${row[3]}</td>
 <td class="status">${row[4]}</td>
 <td><button type="button" class="edit-button">edit</button></td>
-`;
+    `;
         tr.dataset.id = row[0];
         document.getElementById("data").appendChild(tr);
       });
@@ -197,9 +203,9 @@ async function getData() {
       }
       const selectDate = new Date(document.getElementById("dateselect").value);
       const sunday = new Date(
-        selectDate.setDate(new Date().getDate() - new Date().getDay()),
+        selectDate.setDate(selectDate.getDate() - (selectDate.getDay() + 3)),
       );
-      for (let i = 0; i < 8; i++) {
+      for (let i = 0; i < 14; i++) {
         let dayOfWeek = new Date(new Date().setDate(sunday.getDate() + i));
         let monthDay =
           String(dayOfWeek.getMonth() + 1).padStart(2, "0") +
@@ -247,7 +253,7 @@ async function getData() {
 `;
         // grid.innerHTML += dayOfWeek.toLocaleString();
       }
-      grid.scrollLeft = grid.scrollWidth;
+      // grid.scrollLeft = grid.scrollWidth;
       document.querySelectorAll(".edit-button").forEach((button) => {
         button.addEventListener("click", toggleEditable);
       });
@@ -301,12 +307,12 @@ async function addEvent(e) {
             })
             .then((res) => {
               console.log(res);
-              document.getElementById("data").innerHTML = "";
-              getData();
-              document.querySelectorAll(".modal").forEach((el) => {
-                el.style.visibility = "hidden";
-              });
             });
+          document.getElementById("data").innerHTML = "";
+          getData();
+          document.querySelectorAll(".modal").forEach((el) => {
+            el.style.visibility = "hidden";
+          });
         } catch (err) {
           console.log(err);
         }
