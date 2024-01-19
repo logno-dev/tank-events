@@ -2,13 +2,15 @@ export function getDateRange(date, buffer) {
   const selectDate = date;
   const startDate = new Date(
     new Date(
-      selectDate.setDate(selectDate.getDate() - (selectDate.getDay() + buffer)),
+      new Date(selectDate.toISOString()).setDate(
+        selectDate.getDate() - (selectDate.getDay() + buffer),
+      ),
     ).setHours(12),
   ).toISOString();
 
   const endDate = new Date(
     new Date(
-      selectDate.setDate(
+      new Date(selectDate.toISOString()).setDate(
         selectDate.getDate() + (7 - selectDate.getDay() + buffer),
       ),
     ).setHours(12),
