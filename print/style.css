@@ -92,7 +92,6 @@ button:focus-visible {
 
 #grid {
   display: flex;
-  overflow-x: auto;
 }
 
 .grid-date,
@@ -161,6 +160,7 @@ button:focus-visible {
 }
 
 .add {
+  display: none;
   background-color: #ccc;
   border-color: white;
   color: white;
@@ -222,4 +222,14 @@ td {
 
 .hourwrapper {
   display: flex;
+}
+
+@media print {
+  :root {
+    background-color: white;
+  }
+
+  body {
+    margin-left: 3rem;
+  }
 }

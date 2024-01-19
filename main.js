@@ -1,315 +1,17 @@
 import "./style.css";
-import { client } from "./components/client.js";
+import { getData } from "./components/getData.js";
+import { drawGrid } from "./components/drawGrid.js";
+import { drawTable } from "./components/drawTable.js";
+import { getStatus } from "./components/getStatus.js";
+import { addEvent, editEvent } from "./components/events.js";
+import { items } from "./components/constants.js";
 
-const items = [
-  "chiller",
-  "2100",
-  "3200",
-  "2300",
-  "3300",
-  "2200",
-  "3100",
-  "2000",
-  "3000",
-  "4000",
-  "filler2",
-  "filler3",
-  "filler4",
-  "filler5",
-  "fruitlines",
-  "hoses",
-];
-
-function toggleEditable(e) {
-  const row = e.target.parentNode.parentNode;
-  const id = row.dataset.id;
-  const item = row.querySelector(".item").innerText;
-  const type = row.querySelector(".type").innerText;
-  const date = row.querySelector(".date").innerText;
-  const status = row.querySelector(".status").innerText;
-
-  row.innerHTML = `
-<td colspan="5">
-  <form name="editevent" class="editevent-form">
-  <input type="hidden" name="id" value="${id}">
-  <select name="item" class="item"">
-    ${items
-      .map(
-        (i) =>
-          `<option value="${i}" ${item === i ? "selected" : ""}>${i}</option>`,
-      )
-      .join("")}
-    </select>
-  <select name="type" class="type">
-    <option value="CIP" ${type === "CIP" ? "selected" : ""}>CIP</option>
-    <option value="SB" ${type === "SB" ? "selected" : ""}>SB Bio</option>
-    <option value="VEGE" ${type === "VEGE" ? "selected" : ""}>VEGE</option>
-    <option value="ESL" ${type === "ESL" ? "selected" : ""}>ESL</option>
-  </select>
-  <input type="text" name="date" value="${date}">
-  <select name="status" class="status" value="${status}">
-    <option value="completed" ${status === "completed" ? "selected" : ""
-    }>Completed</option>
-    <option value="scheduled" ${status === "scheduled" ? "selected" : ""
-    }>Scheduled</option>
-  </select>
-  <button type="submit">Save</button>
-    </form>
-</td>
-`;
-  // document
-  //   .querySelector(".editevent-form")
-  //   .addEventListener("submit", editEvent);
+async function draw() {
+  const data = await getData(3);
+  return data;
 }
 
-function loadModal(e) {
-  const id = e.target.dataset.id;
-  const item = e.target.dataset.item;
-  const type = e.target.dataset.type;
-  const date = e.target.dataset.date;
-  const status = e.target.dataset.status;
-
-  const modalForm = document.getElementById("modal-form");
-  modalForm.querySelector(".modal-id").value = id;
-  modalForm.querySelector(".modal-item").value = item;
-  modalForm.querySelector(".modal-type").value = type;
-  modalForm.querySelector(".modal-date").value = date;
-  modalForm.querySelector(".modal-status").value = status;
-  //
-  document.querySelectorAll(".modal").forEach((el) => {
-    el.style.visibility = "visible";
-  });
-}
-
-function createCell(iterator, event, date, time1, time2) {
-  const formatDate = date.replace("/", "-");
-  const objectArr = event.filter((e) => e.date.includes(formatDate));
-  const reducedArr = objectArr.filter((e) => {
-    let time = e.date.split("T")[1].split(":")[0];
-    return e.item.includes(iterator) && time >= time1 && time < time2;
-  });
-  const evenOdd = Number(date.split("/")[1]) % 2 === 0 ? "even" : "odd";
-  if (reducedArr.length === 0) {
-    return `<div class="row ${evenOdd}">
-<div class="dot add event-marker"
-  data-id=""
-  data-item="${iterator}"
-  data-date="${new Date().getFullYear() + "-" + formatDate + "T" + time1 + ":00:00:00Z"
-      }"
->+</div>
-
-</div>`;
-  }
-  reducedArr.sort((a, b) => {
-    let timea = a.date.split("T")[1].split(":")[0];
-    let timeb = b.date.split("T")[1].split(":")[0];
-    if (timea < timeb) {
-      return -1;
-    } else if (timea > timeb) {
-      return 1;
-    }
-    return 0;
-  });
-  return `
-<div class="row ${evenOdd}">
-${reducedArr
-      .map((e) => {
-        return `
-<div class="dot event-marker ${e.status} ${e.type}"
-data-id="${e.id}"
-data-item="${e.item}"
-data-type="${e.type}"
-data-date="${e.date}"
-data-status="${e.status}"
->${e.type}</div>
-`;
-      })
-      .join("")}
-<div class="dot add event-marker"
-data-id=""
-data-item="${iterator}"
-data-date="${new Date().getFullYear() + "-" + formatDate + "T" + time1 + ":00:00:00Z"
-      }"
->+</div>
-</div >
-      `;
-}
-
-async function getData() {
-  const data = await client
-    .execute("select * from events order by date desc limit 100")
-    .then((response) => {
-      const grid = document.getElementById("grid");
-      const res = response.rows;
-      console.log(res);
-      res.forEach((row) => {
-        const tr = document.createElement("tr");
-        tr.setAttribute("id", row[0]);
-        tr.dataset.id = row[0];
-        tr.classList.add("table-data");
-        tr.innerHTML = `
-      <td class="item">${row[1]}</td >
-<td class="type">${row[2]}</td>
-<td class="date">${row[3]}</td>
-<td class="status">${row[4]}</td>
-<td><button type="button" class="edit-button">edit</button></td>
-    `;
-        tr.dataset.id = row[0];
-        document.getElementById("data").appendChild(tr);
-      });
-      grid.innerHTML = "";
-      const paramDate = new URL(window.location).searchParams.get("date");
-      if (paramDate) {
-        document.getElementById("dateselect").valueAsDate = new Date(paramDate);
-      } else {
-        document.getElementById("dateselect").valueAsDate = new Date();
-      }
-      const selectDate = new Date(document.getElementById("dateselect").value);
-      const sunday = new Date(
-        selectDate.setDate(selectDate.getDate() - (selectDate.getDay() + 2)),
-      );
-      for (let i = 0; i < 12; i++) {
-        let dayOfWeek = new Date(new Date().setDate(sunday.getDate() + i));
-        let monthDay =
-          String(dayOfWeek.getMonth() + 1).padStart(2, "0") +
-          "/" +
-          String(dayOfWeek.getDate()).padStart(2, "0");
-        grid.innerHTML += `
-<div class="daycol">
-  <div class="dayheader row">${monthDay}</div>
-    <div class="hourwrapper">
-      <div class="hourcol">
-        <div class="hourheader row">0-6</div>
-          ${items
-            .map((item) => {
-              return createCell(item, res, monthDay, 0, 7);
-            })
-            .join("")}
-      </div>
-      <div class="hourcol">
-        <div class="hourheader row">7-12</div>
-          ${items
-            .map((item) => {
-              return createCell(item, res, monthDay, 7, 13);
-            })
-            .join("")}
-      </div>
-      <div class="hourcol">
-        <div class="hourheader row">13-18</div>
-          ${items
-            .map((item) => {
-              return createCell(item, res, monthDay, 13, 19);
-            })
-            .join("")}
-      </div>
-      <div class="hourcol">
-        <div class="hourheader row">19-24</div>
-          ${items
-            .map((item) => {
-              return createCell(item, res, monthDay, 19, 25);
-            })
-            .join("")}
-      </div>
-    </div>
-  </div>
-</div>
-`;
-        // grid.innerHTML += dayOfWeek.toLocaleString();
-      }
-      // grid.scrollLeft = grid.scrollWidth;
-      document.querySelectorAll(".edit-button").forEach((button) => {
-        button.addEventListener("click", toggleEditable);
-      });
-
-      document.querySelectorAll(".event-marker").forEach((el) => {
-        el.addEventListener("click", (e) => loadModal(e));
-      });
-    });
-}
-
-async function addEvent(e) {
-  e.preventDefault();
-  const formData = new FormData(e.target);
-  let id;
-  const item = formData.get("item");
-  const event = formData.get("type");
-  const date = formData.get("date");
-  const time = formData.get("time") || "";
-  const status = formData.get("status");
-
-  const formattedDate = date.includes("T")
-    ? date
-    : date + "T" + time.padStart(2, "0") + ":00:00";
-
-  try {
-    client
-      .execute("select id from events order by id desc limit 1")
-      .then((res) => {
-        console.log(res);
-        id = res.rows.length === 0 ? 0 : res.rows[0].id + 1;
-        try {
-          client
-            .execute({
-              sql: "insert into events values (:id, :item, :event, :date, :status)",
-              args: {
-                id: Number(id),
-                item: item,
-                event: event,
-                date: formattedDate,
-                status: status,
-              },
-            })
-            .then((res) => {
-              console.log(res);
-            });
-          document.getElementById("data").innerHTML = "";
-          getData();
-          document.querySelectorAll(".modal").forEach((el) => {
-            el.style.visibility = "hidden";
-          });
-        } catch (err) {
-          console.log(err);
-        }
-      });
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-function editEvent(e) {
-  e.preventDefault();
-  const formData = new FormData(e.target);
-  const id = formData.get("id");
-  const item = formData.get("item");
-  const type = formData.get("type");
-  const date = formData.get("date");
-  const status = formData.get("status");
-
-  try {
-    client
-      .execute({
-        sql: "update events set item = :item, type = :type, date = :date, status = :status where id = :id",
-        args: {
-          id: Number(id),
-          item: item,
-          type: type,
-          date: date,
-          status: status,
-        },
-      })
-      .then((res) => {
-        console.log(res);
-        document.getElementById("data").innerHTML = "";
-        getData();
-        document.querySelectorAll(".modal").forEach((el) => {
-          el.style.visibility = "hidden";
-        });
-      });
-  } catch (err) {
-    console.log(err);
-  }
-}
-
+// Draw static elements
 document.querySelector("#app").innerHTML = `
 <div class="flex">
   <label>Select Date:
@@ -321,7 +23,9 @@ document.querySelector("#app").innerHTML = `
   <div id="vert-header">
     <div class="vheader">Date:</div>
     <div class="vheader">Time:</div>
-    ${items.map((item) => `<div class="vheader">${item}</div>`).join("")}
+    ${items
+    .map((item) => `<div class="vheader" id="header-${item}">${item}</div>`)
+    .join("")}
   </div>
   <div id="grid"></div>
 </div>
@@ -377,9 +81,18 @@ document.querySelector("#app").innerHTML = `
 </div>
 `;
 
-window.addEventListener("load", getData);
+window.addEventListener("load", () => {
+  draw().then((res) => {
+    drawGrid(res, 3);
+    drawTable(res);
+    getStatus();
+  });
+});
 
+// Set default date to today
 document.getElementById("today").valueAsDate = new Date();
+
+// Add event listeners for modal
 document.getElementById("newevent").addEventListener("submit", addEvent);
 const modalBack = document.querySelector(".modal-backdrop");
 modalBack.addEventListener("click", (event) => {
@@ -389,16 +102,16 @@ modalBack.addEventListener("click", (event) => {
   });
 });
 
-document
-  .querySelector(".editevent-form")
-  .addEventListener("submit", (e) => {
-    if (!new FormData(e.target).get("id")) {
-      addEvent(e);
-    } else {
-      editEvent(e);
-    }
-  });
+// Event listeners for table data
+document.querySelector(".editevent-form").addEventListener("submit", (e) => {
+  if (!new FormData(e.target).get("id")) {
+    addEvent(e);
+  } else {
+    editEvent(e);
+  }
+});
 
+// change data based on date selection
 document.getElementById("dateselect").addEventListener("change", (e) => {
   window.location.href = window.location.origin + "?date=" + e.target.value;
 });
