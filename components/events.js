@@ -1,7 +1,6 @@
 import { client } from "./client.js";
-import { getData } from "./getData.js";
 
-export async function addEvent(e) {
+export async function addEvent(e, callback) {
   e.preventDefault();
   const formData = new FormData(e.target);
   let id;
@@ -15,42 +14,35 @@ export async function addEvent(e) {
     ? date
     : date + "T" + time.padStart(2, "0") + ":00:00";
 
-  try {
-    client
-      .execute("select id from events order by id desc limit 1")
-      .then((res) => {
-        console.log(res);
-        id = res.rows.length === 0 ? 0 : res.rows[0].id + 1;
-        try {
-          client
-            .execute({
-              sql: "insert into events values (:id, :item, :event, :date, :status)",
-              args: {
-                id: Number(id),
-                item: item,
-                event: event,
-                date: formattedDate,
-                status: status,
-              },
-            })
-            .then((res) => {
-              console.log(res);
-            });
+  const request = client
+    .execute("select id from events order by id desc limit 1")
+    .then((res) => {
+      console.log(res);
+      id = res.rows.length === 0 ? 0 : res.rows[0].id + 1;
+      client
+        .execute({
+          sql: "insert into events values (:id, :item, :event, :date, :status)",
+          args: {
+            id: Number(id),
+            item: item,
+            event: event,
+            date: formattedDate,
+            status: status,
+          },
+        })
+        .then((res) => {
+          console.log(res);
           document.getElementById("data").innerHTML = "";
-          getData(3);
           document.querySelectorAll(".modal").forEach((el) => {
             el.style.visibility = "hidden";
           });
-        } catch (err) {
-          console.log(err);
-        }
-      });
-  } catch (err) {
-    console.log(err);
-  }
+          callback();
+        });
+    });
+  return request;
 }
 
-export function editEvent(e) {
+export async function editEvent(e, callback) {
   e.preventDefault();
   const formData = new FormData(e.target);
   const id = formData.get("id");
@@ -59,27 +51,23 @@ export function editEvent(e) {
   const date = formData.get("date");
   const status = formData.get("status");
 
-  try {
-    client
-      .execute({
-        sql: "update events set item = :item, type = :type, date = :date, status = :status where id = :id",
-        args: {
-          id: Number(id),
-          item: item,
-          type: type,
-          date: date,
-          status: status,
-        },
-      })
-      .then((res) => {
-        console.log(res);
-        document.getElementById("data").innerHTML = "";
-        getData();
-        document.querySelectorAll(".modal").forEach((el) => {
-          el.style.visibility = "hidden";
-        });
+  client
+    .execute({
+      sql: "update events set item = :item, type = :type, date = :date, status = :status where id = :id",
+      args: {
+        id: Number(id),
+        item: item,
+        type: type,
+        date: date,
+        status: status,
+      },
+    })
+    .then((res) => {
+      console.log(res);
+      document.getElementById("data").innerHTML = "";
+      document.querySelectorAll(".modal").forEach((el) => {
+        el.style.visibility = "hidden";
       });
-  } catch (err) {
-    console.log(err);
-  }
+      callback();
+    });
 }

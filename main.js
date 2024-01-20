@@ -81,19 +81,23 @@ document.querySelector("#app").innerHTML = `
 </div>
 `;
 
-window.addEventListener("load", () => {
+window.addEventListener("load", redraw);
+
+function redraw() {
   draw().then((res) => {
     drawGrid(res, 3);
     drawTable(res);
     getStatus();
   });
-});
+}
 
 // Set default date to today
 document.getElementById("today").valueAsDate = new Date();
 
 // Add event listeners for modal
-document.getElementById("newevent").addEventListener("submit", addEvent);
+document.getElementById("newevent").addEventListener("submit", (e) => {
+  addEvent(e, redraw);
+});
 const modalBack = document.querySelector(".modal-backdrop");
 modalBack.addEventListener("click", (event) => {
   if (modalBack !== event.target) return;
@@ -105,9 +109,9 @@ modalBack.addEventListener("click", (event) => {
 // Event listeners for table data
 document.querySelector(".editevent-form").addEventListener("submit", (e) => {
   if (!new FormData(e.target).get("id")) {
-    addEvent(e);
+    addEvent(e, redraw);
   } else {
-    editEvent(e);
+    editEvent(e, redraw);
   }
 });
 
