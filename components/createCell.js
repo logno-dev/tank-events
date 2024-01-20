@@ -11,7 +11,7 @@ export function createCell(iterator, event, date, time1, time2) {
 <div class="dot add event-marker"
   data-id=""
   data-item="${iterator}"
-  data-date="${new Date().getFullYear() + "-" + formatDate + "T" + time1 + ":00:00:00Z"
+  data-date="${new Date().getFullYear() + "-" + formatDate + "T" + time1 + ":00:00.00Z"
       }"
 >+</div>
 

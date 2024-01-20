@@ -15,7 +15,7 @@ export async function getData(width) {
 
   const data = client
     .execute({
-      sql: "select * from events where date > :startDate and date < :endDate order by date desc limit 100",
+      sql: "select * from events where date > :startDate and date < :endDate order by date desc",
       args: {
         startDate: startDate,
         endDate: endDate,

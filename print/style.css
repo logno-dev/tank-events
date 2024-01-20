@@ -101,7 +101,6 @@ button:focus-visible {
 
 .flex {
   display: flex;
-  max-width: calc(100dvw - 8rem);
   justify-content: center;
 }
 
