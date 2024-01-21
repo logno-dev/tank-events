@@ -11,7 +11,7 @@ export function drawTable(res) {
 <td class="type">${row[2]}</td>
 <td class="date">${row[3]}</td>
 <td class="status">${row[4]}</td>
-<td><button type="button" class="edit-button">edit</button></td>
+<td><button type="button" class="edit-button">&#9998;</button></td>
     `;
     tr.dataset.id = row[0];
     document.getElementById("data").appendChild(tr);

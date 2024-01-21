@@ -11,11 +11,11 @@ export async function getData(width) {
 
   const selectDate = new Date(document.getElementById("dateselect").value);
 
-  const [startDate, endDate] = getDateRange(selectDate, 2);
+  const [startDate, endDate] = getDateRange(selectDate, width);
 
   const data = client
     .execute({
-      sql: "select * from events where date > :startDate and date < :endDate order by date desc",
+      sql: "select * from events where date >= :startDate and date < :endDate order by date desc",
       args: {
         startDate: startDate,
         endDate: endDate,

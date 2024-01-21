@@ -7,7 +7,7 @@ import { addEvent, editEvent } from "./components/events.js";
 import { items } from "./components/constants.js";
 
 async function draw() {
-  const data = await getData(3);
+  const data = await getData(2);
   return data;
 }
 
@@ -85,7 +85,7 @@ window.addEventListener("load", redraw);
 
 function redraw() {
   draw().then((res) => {
-    drawGrid(res, 3);
+    drawGrid(res, 2);
     drawTable(res);
     getStatus();
   });

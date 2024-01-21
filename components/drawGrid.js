@@ -10,7 +10,7 @@ export function drawGrid(res, width) {
   const selectDate = new Date(document.getElementById("dateselect").value);
   const [startDate, endDate, days] = getDateRange(selectDate, width);
 
-  for (let i = 0; i < days; i++) {
+  for (let i = 1; i < days; i++) {
     let dayOfWeek = new Date(
       new Date().setDate(new Date(startDate).getDate() + i),
     );

@@ -13,7 +13,7 @@ export function createCell(iterator, event, date, time1, time2) {
   data-item="${iterator}"
   data-date="${new Date().getFullYear() + "-" + formatDate + "T" + time1 + ":00:00.00Z"
       }"
->+</div>
+>&#10133;</div>
 
 </div>`;
   }
@@ -47,7 +47,7 @@ data-id=""
 data-item="${iterator}"
 data-date="${new Date().getFullYear() + "-" + formatDate + "T" + time1 + ":00:00:00Z"
     }"
->+</div>
+>&#10133;</div>
 </div >
       `;
 }
