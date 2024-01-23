@@ -1,6 +1,9 @@
 import { client } from "./client.js";
 import { items } from "./constants.js";
 
+// query to pull latest status:
+// select *, max(date) as last_date from events where status = "completed" group by item;
+
 export function getStatus() {
   items.forEach((item) => {
     client
