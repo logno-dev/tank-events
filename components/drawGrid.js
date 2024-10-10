@@ -14,8 +14,7 @@ export function drawGrid(res, width) {
     let dayOfWeek = new Date(
       new Date().setDate(new Date(startDate).getDate() + i),
     );
-    let monthDay =
-      String(dayOfWeek.getMonth() + 1).padStart(2, "0") +
+    let monthDay = String(dayOfWeek.getMonth() + 1).padStart(2, "0") +
       "/" +
       String(dayOfWeek.getDate()).padStart(2, "0");
     grid.innerHTML += `
@@ -23,36 +22,13 @@ export function drawGrid(res, width) {
   <div class="dayheader row">${monthDay}</div>
     <div class="hourwrapper">
       <div class="hourcol">
-        <div class="hourheader row">0-6</div>
-          ${items
+          ${
+      items
         .map((item) => {
-          return createCell(item, res, monthDay, 0, 7);
+          return createCell(item, res, monthDay, 0, 25);
         })
-        .join("")}
-      </div>
-      <div class="hourcol">
-        <div class="hourheader row">7-12</div>
-          ${items
-        .map((item) => {
-          return createCell(item, res, monthDay, 7, 13);
-        })
-        .join("")}
-      </div>
-      <div class="hourcol">
-        <div class="hourheader row">13-18</div>
-          ${items
-        .map((item) => {
-          return createCell(item, res, monthDay, 13, 19);
-        })
-        .join("")}
-      </div>
-      <div class="hourcol">
-        <div class="hourheader row">19-24</div>
-          ${items
-        .map((item) => {
-          return createCell(item, res, monthDay, 19, 25);
-        })
-        .join("")}
+        .join("")
+    }
       </div>
     </div>
   </div>

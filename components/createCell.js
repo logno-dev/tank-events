@@ -11,8 +11,9 @@ export function createCell(iterator, event, date, time1, time2) {
 <div class="dot add event-marker"
   data-id=""
   data-item="${iterator}"
-  data-date="${new Date().getFullYear() + "-" + formatDate + "T" + time1 + ":00:00.00Z"
-      }"
+  data-date="${
+      new Date().getFullYear() + "-" + formatDate + "T" + time1 + ":00:00.00Z"
+    }"
 >&#10133;</div>
 
 </div>`;
@@ -29,10 +30,13 @@ export function createCell(iterator, event, date, time1, time2) {
   });
   return `
 <div class="row ${evenOdd}">
-${reducedArr
+<div class="event-container">
+${
+    reducedArr
       .map((e) => {
+        const hour = e.date.split("T")[1].split(":")[0];
         return `
-<div class="dot event-marker ${e.status} ${e.type}"
+<div class="dot event-marker ${e.status} ${e.type} abs hr-${hour}"
 data-id="${e.id}"
 data-item="${e.item}"
 data-type="${e.type}"
@@ -41,12 +45,15 @@ data-status="${e.status}"
 >${e.type}</div>
 `;
       })
-      .join("")}
+      .join("")
+  }
+</div>
 <div class="dot add event-marker"
 data-id=""
 data-item="${iterator}"
-data-date="${new Date().getFullYear() + "-" + formatDate + "T" + time1 + ":00:00:00Z"
-    }"
+data-date="${
+    new Date().getFullYear() + "-" + formatDate + "T" + time1 + ":00:00:00Z"
+  }"
 >&#10133;</div>
 </div >
       `;

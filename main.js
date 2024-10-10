@@ -22,10 +22,11 @@ document.querySelector("#app").innerHTML = `
 
   <div id="vert-header">
     <div class="vheader">Date:</div>
-    <div class="vheader">Time:</div>
-    ${items
+    ${
+  items
     .map((item) => `<div class="vheader" id="header-${item}">${item}</div>`)
-    .join("")}
+    .join("")
+}
   </div>
   <div id="grid"></div>
 </div>

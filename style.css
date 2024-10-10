@@ -115,22 +115,139 @@ button:focus-visible {
 
 .row {
   display: flex;
-  flex-wrap: wrap;
   place-items: center;
   place-content: center;
+}
+
+.event-container {
+  position: relative;
+  width: 250px;
+  height: 2.6rem;
 }
 
 .dot {
   display: flex;
   place-items: center;
   place-content: center;
-  --dot-size: 18px;
+  --dot-size: 14px;
   height: var(--dot-size);
   width: var(--dot-size);
   border-radius: 50%;
   font-size: 8px;
   border: 1px solid rgba(0, 0, 0, 0);
+  --dot-pos: 10px;
 }
+
+.abs {
+  position: absolute;
+}
+
+.hr-00 {
+
+  left: 0;
+}
+
+.hr-01 {
+  left: calc(var(--dot-pos)*1);
+}
+
+.hr-02 {
+  left: calc(var(--dot-pos)*2);
+}
+
+.hr-03 {
+  left: calc(var(--dot-pos)*3);
+}
+
+.hr-04 {
+  left: calc(var(--dot-pos)*4);
+}
+
+.hr-05 {
+  left: calc(var(--dot-pos)*5);
+}
+
+.hr-06 {
+  left: calc(var(--dot-pos)*6);
+}
+
+.hr-07 {
+  left: calc(var(--dot-pos)*7);
+}
+
+.hr-08 {
+  left: calc(var(--dot-pos)*8);
+}
+
+.hr-09 {
+  left: calc(var(--dot-pos)*8);
+}
+
+.hr-10 {
+  left: calc(var(--dot-pos)*10);
+}
+
+.hr-11 {
+  left: calc(var(--dot-pos)*11);
+}
+
+.hr-12 {
+  top: 0;
+  left: calc(var(--dot-pos)*12);
+}
+
+.hr-13 {
+  left: calc(var(--dot-pos)*13);
+}
+
+.hr-14 {
+  left: calc(var(--dot-pos)*14);
+}
+
+.hr-15 {
+  left: calc(var(--dot-pos)*15);
+}
+
+.hr-16 {
+  left: calc(var(--dot-pos)*16);
+}
+
+.hr-17 {
+  left: calc(var(--dot-pos)*17);
+}
+
+.hr-18 {
+  left: calc(var(--dot-pos)*18);
+}
+
+.hr-19 {
+  left: calc(var(--dot-pos)*19);
+}
+
+.hr-20 {
+  left: calc(var(--dot-pos)*20);
+}
+
+.hr-21 {
+  left: calc(var(--dot-pos)*21);
+}
+
+.hr-22 {
+  left: calc(var(--dot-pos)*22);
+}
+
+.hr-23 {
+  left: calc(var(--dot-pos)*23);
+}
+
+.hr-24 {
+  left: calc(var(--dot-pos)*24);
+}
+
+.hr-25 {
+  left: calc(var(--dot-pos)*25);
+}
+
 
 .vheader {
   font-size: 0.9rem;
@@ -142,18 +259,22 @@ button:focus-visible {
 
 .CIP {
   background-color: #b0e0b0;
+  top: 8px;
 }
 
 .SB {
   background-color: #b0b0e0;
+  top: 24px;
 }
 
 .VEGE {
   background-color: #e0b0b0;
+  top: 26px;
 }
 
 .ESL {
   background-color: lightcyan;
+  top: 26px;
 }
 
 .expired {
