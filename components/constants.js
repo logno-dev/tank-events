@@ -1,4 +1,5 @@
 export const items = [
+  "4000",
   "2000",
   "2100",
   "2200",
@@ -7,7 +8,6 @@ export const items = [
   "3100",
   "3200",
   "3300",
-  "4000",
   "filler2",
   "filler3",
   "filler4",
