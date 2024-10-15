@@ -1,6 +1,6 @@
 import { client } from "./client.js";
 
-export async function addEvent(e, callback) {
+export function addEvent(e, callback) {
   e.preventDefault();
   const formData = new FormData(e.target);
   let id;
@@ -14,7 +14,7 @@ export async function addEvent(e, callback) {
     ? date
     : date + "T" + time.padStart(2, "0") + ":00:00";
 
-  const request = client
+  client
     .execute("select id from events order by id desc limit 1")
     .then((res) => {
       console.log(res);
@@ -32,17 +32,12 @@ export async function addEvent(e, callback) {
         })
         .then((res) => {
           console.log(res);
-          document.getElementById("data").innerHTML = "";
-          document.querySelectorAll(".modal").forEach((el) => {
-            el.style.visibility = "hidden";
-          });
           callback();
         });
     });
-  return request;
 }
 
-export async function editEvent(e, callback) {
+export function editEvent(e, callback) {
   e.preventDefault();
   const formData = new FormData(e.target);
   const id = formData.get("id");
@@ -53,7 +48,8 @@ export async function editEvent(e, callback) {
 
   client
     .execute({
-      sql: "update events set item = :item, type = :type, date = :date, status = :status where id = :id",
+      sql:
+        "update events set item = :item, type = :type, date = :date, status = :status where id = :id",
       args: {
         id: Number(id),
         item: item,
@@ -64,10 +60,6 @@ export async function editEvent(e, callback) {
     })
     .then((res) => {
       console.log(res);
-      document.getElementById("data").innerHTML = "";
-      document.querySelectorAll(".modal").forEach((el) => {
-        el.style.visibility = "hidden";
-      });
       callback();
     });
 }

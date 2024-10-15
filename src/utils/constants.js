@@ -12,7 +12,7 @@ export const items = [
   "filler3",
   "filler4",
   "filler5",
-  "chiller",
   "fruitlines",
+  "chiller",
   "hoses",
 ];
