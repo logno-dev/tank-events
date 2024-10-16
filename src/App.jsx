@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Form from "./components/Form.jsx";
 import Grid from "./components/Grid.jsx";
+import { getData } from "./utils/getData.js";
 
 function App() {
   const [formData, setFormData] = useState({
@@ -13,11 +14,20 @@ function App() {
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().split("T")[0],
   );
+  const [data, setData] = useState([]);
+
+  async function response() {
+    await getData(selectedDate, 2).then((r) => setData(r));
+  }
+
+  useEffect(() => {
+    response();
+  }, [selectedDate]);
 
   return (
     <>
-      <div className="flex h-[100dvh] bg-slate-500 place-items-center">
-        <div className="flex py-4 h-[100%] bg-blue-500 flex-col flex-grow place-items-center">
+      <div className="flex min-h-[100dvh] place-items-center items-start">
+        <div className="flex px-2 py-4 min-h-[100dvh] bg-slate-500 flex-col flex-grow place-items-center">
           <input
             type="date"
             name="selected-date"
@@ -29,12 +39,15 @@ function App() {
             setData={setFormData}
           />
         </div>
-        <div className="h-[100%] bg-yellow-500 flex-grow">
-          <Grid
-            date={selectedDate}
-          />
+        <div className="h-[100dvh] flex-grow overflow-auto">
+          {data && (
+            <Grid
+              date={selectedDate}
+              data={data}
+            />
+          )}
         </div>
-        <div className="h-[100%] bg-pink-500 flex-grow"></div>
+        <div className="h-[100%] flex-grow"></div>
       </div>
     </>
   );

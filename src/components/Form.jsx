@@ -3,17 +3,19 @@ import { items } from "../utils/constants.js";
 export default function Form({ data, setData }) {
   return (
     <form
-      className="flex flex-col flex-grow justify-center gap-2 font-bold"
+      className="flex flex-col flex-grow justify-center gap-2 font-bold text-white"
       onSubmit={(e) => {
         e.preventDefault();
         console.log(data);
       }}
     >
       <label>
-        Event:<select
+        Event:{" "}
+        <select
           name="type"
           value={data.event}
           onChange={(e) => setData({ ...data, event: e.target.value })}
+          className="text-black p-1 rounded-md"
         >
           <option value="CIP">CIP</option>
           <option value="SB">SB</option>
@@ -22,33 +24,40 @@ export default function Form({ data, setData }) {
         </select>
       </label>
       <label>
-        Date:<input
+        Date:{" "}
+        <input
           type="date"
           name="date"
           value={data.date}
           onChange={(e) => setData({ ...data, date: e.target.value })}
+          className="text-black p-1 rounded-md"
         />
       </label>
       <label>
-        Status:<select
+        Status:{" "}
+        <select
           name="status"
           value={data.status}
           onChange={(e) => setData({ ...data, status: e.target.value })}
+          className="text-black p-1 rounded-md"
         >
           <option value="completed">Completed</option>
           <option value="scheduled">Scheduled</option>
         </select>
       </label>
       <label>
-        Item:<select
+        Item:{" "}
+        <select
           value={data.item}
           onChange={(e) => setData({ ...data, item: e.target.value })}
+          className="text-black p-1 rounded-md"
         >
           {items.map((item) => <option key={item} value={item}>{item}</option>)}
         </select>
       </label>
       <label>
-        Hour:<input
+        Hour:{" "}
+        <input
           type="number"
           min="0"
           max="24"
@@ -60,9 +69,15 @@ export default function Form({ data, setData }) {
               time: e.target.value.slice(0, 2),
             })}
           value={data.time}
+          className="text-black p-1 rounded-md"
         />
       </label>
-      <button type="submit">Add</button>
+      <button
+        className="p-1 w-14 border-2 rounded-md border-white hover:bg-white hover:text-slate-600"
+        type="submit"
+      >
+        Add
+      </button>
     </form>
   );
 }

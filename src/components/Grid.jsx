@@ -3,17 +3,22 @@ import { getDateRange } from "../utils/getDateRange.js";
 import { items } from "../utils/constants.js";
 import { useEffect } from "react";
 import { useMemo } from "react";
+import Cell from "./Cell.jsx";
+import { v4 as uuid } from "uuid";
 
-export default function Grid({ date }) {
+export default function Grid({ date, data }) {
   const [days, setDays] = useState();
   const [startDate, setStartDate] = useState();
 
   useEffect(() => {
-    console.log("date changed to:", date);
-    const [sd, d] = getDateRange(date, 2);
+    const [sd, _, d] = getDateRange(date, 2);
     setStartDate(sd);
     setDays(d);
   }, [date]);
+
+  const d = useMemo(() => {
+    return data;
+  }, [data]);
 
   const daysArr = useMemo(() => {
     const tempDaysArr = [];
@@ -23,23 +28,51 @@ export default function Grid({ date }) {
       );
       const monthDay = String(dayOfWeek.getMonth() + 1).padStart(2, "0") + "/" +
         String(dayOfWeek.getDate()).padStart(2, "0");
-      tempDaysArr.push(monthDay);
+      tempDaysArr.push({ monthDay, fullDate: dayOfWeek });
     }
     return tempDaysArr;
   }, [days, startDate]);
 
-  useEffect(() => {
-    console.log(daysArr);
-  }, [daysArr]);
-
   return (
     <>
-      <div>
+      <div className="flex">
+        <div>
+          <div className="sticky top-0 border border-black w-14 h-6"></div>
+          {daysArr.map((day) => (
+            <div
+              key={day.monthDay + uuid()}
+              className="border border-black w-14 h-64 flex place-content-center items-center"
+            >
+              {day.monthDay}
+            </div>
+          ))}
+        </div>
         {items.map((item) => (
-          <span className="p-1 border border-black" key={item}>{item}</span>
+          <div>
+            <div
+              className="flex sticky top-0 place-content-center items-center text-xs border border-black bg-slate-100 w-14 h-6"
+              key={item + uuid()}
+            >
+              {item}
+            </div>
+            {daysArr.map((day) => (
+              <div
+                className="border border-black w-14 h-64"
+                key={item + day.monthDay + uuid()}
+              >
+                {d && (
+                  <Cell
+                    key={item + day.fullDate + uuid()}
+                    data={d}
+                    day={day}
+                    item={item}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
         ))}
       </div>
-      {daysArr.map((day) => <div key={day}>{day}</div>)}
     </>
   );
 }
