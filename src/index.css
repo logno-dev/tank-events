@@ -6,4 +6,125 @@ html,
 body,
 #root {
   height: 100%;
+  --item-height: 10px;
+}
+
+.timeline-0 {
+  top: 0;
+}
+
+.timeline-1 {
+  top: calc(var(--item-height) * 1);
+}
+
+.timeline-2 {
+  top: calc(var(--item-height) * 2);
+}
+
+.timeline-3 {
+  top: calc(var(--item-height) * 3);
+}
+
+.timeline-4 {
+  top: calc(var(--item-height) * 4);
+}
+
+.timeline-5 {
+  top: calc(var(--item-height) * 5);
+}
+
+.timeline-6 {
+  top: calc(var(--item-height) * 6);
+}
+
+.timeline-7 {
+  top: calc(var(--item-height) * 7);
+}
+
+.timeline-8 {
+  top: calc(var(--item-height) * 8);
+}
+
+.timeline-9 {
+  top: calc(var(--item-height) * 9);
+}
+
+.timeline-10 {
+  top: calc(var(--item-height) * 10);
+}
+
+.timeline-11 {
+  top: calc(var(--item-height) * 11);
+}
+
+.timeline-12 {
+  top: calc(var(--item-height) * 12);
+}
+
+.timeline-13 {
+  top: calc(var(--item-height) * 13);
+}
+
+.timeline-14 {
+  top: calc(var(--item-height) * 14);
+}
+
+.timeline-15 {
+  top: calc(var(--item-height) * 15);
+}
+
+.timeline-16 {
+  top: calc(var(--item-height) * 16);
+}
+
+.timeline-17 {
+  top: calc(var(--item-height) * 17);
+}
+
+.timeline-18 {
+  top: calc(var(--item-height) * 18);
+}
+
+.timeline-19 {
+  top: calc(var(--item-height) * 19);
+}
+
+.timeline-20 {
+  top: calc(var(--item-height) * 20);
+}
+
+.timeline-21 {
+  top: calc(var(--item-height) * 21);
+}
+
+.timeline-22 {
+  top: calc(var(--item-height) * 22);
+}
+
+.timeline-23 {
+  top: calc(var(--item-height) * 23);
+}
+
+.timeline-24 {
+  top: calc(var(--item-height) * 24);
+}
+
+.timeline-25 {
+  top: calc(var(--item-height) * 25);
+}
+
+.SB {
+  background-color: rgba(170, 60, 210, 0.4);
+}
+
+.CIP {
+  background-color: lightgreen;
+}
+
+.VEGE {
+  background-color: coral;
+}
+
+.ESL {
+  background-color: teal;
 }

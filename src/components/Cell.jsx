@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { v4 as uuid } from "uuid";
 
 export default function Cell({ data, day, item }) {
   const items = useMemo(() => {
@@ -10,8 +11,24 @@ export default function Cell({ data, day, item }) {
   }, [data, day]);
   return (
     <>
-      <div>
-        {items.map((i) => <div key={i.id + i.type + i.item}>{i.type}</div>)}
+      <div className="relative flex justify-center">
+        {items.map((i) => {
+          const hour = Number(i.date.split("T")[1].split(":")[0]);
+          console.log(hour);
+          return (
+            <div
+              className={
+                "absolute w-full h-[10px] text-[8px] flex justify-center timeline-" +
+                hour +
+                " " +
+                i.type
+              }
+              key={i.id + i.type + i.item + uuid()}
+            >
+              {i.type}
+            </div>
+          );
+        })}
       </div>
     </>
   );

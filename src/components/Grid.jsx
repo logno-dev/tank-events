@@ -39,11 +39,11 @@ export default function Grid({ date, data }) {
     <>
       <div className="flex">
         <div>
-          <div className="sticky top-0 border border-black w-16 h-6"></div>
+          <div className="sticky top-0 border border-black bg-slate-100 w-16 h-6 z-50"></div>
           {items.map((item) => (
             <div
               key={item + uuid()}
-              className="border border-black w-16 h-64 flex place-content-center items-center"
+              className="border border-black w-16 h-[250px] flex place-content-center items-center"
             >
               {item}
             </div>
@@ -52,14 +52,14 @@ export default function Grid({ date, data }) {
         {daysArr.map((day) => (
           <div>
             <div
-              className="flex sticky top-0 place-content-center items-center text-xs border border-black bg-slate-100 w-14 h-6"
+              className="flex sticky top-0 place-content-center items-center text-xs border border-black bg-slate-100 w-14 h-6 z-50"
               key={day.monthDay + uuid()}
             >
               {day.monthDay}
             </div>
             {items.map((item) => (
               <div
-                className="border border-black w-14 h-64"
+                className="border border-black w-14 h-[250px]"
                 key={item + day.monthDay + uuid()}
               >
                 {d && (
