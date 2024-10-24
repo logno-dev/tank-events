@@ -26,7 +26,9 @@ export default function Grid({ date, data }) {
       const dayOfWeek = new Date(
         new Date().setDate(new Date(startDate).getDate() + i),
       );
-      const monthDay = String(dayOfWeek.getMonth() + 1).padStart(2, "0") + "/" +
+      const monthDay =
+        String(dayOfWeek.getMonth() + 1).padStart(2, "0") +
+        "/" +
         String(dayOfWeek.getDate()).padStart(2, "0");
       tempDaysArr.push({ monthDay, fullDate: dayOfWeek });
     }
@@ -37,25 +39,25 @@ export default function Grid({ date, data }) {
     <>
       <div className="flex">
         <div>
-          <div className="sticky top-0 border border-black w-14 h-6"></div>
-          {daysArr.map((day) => (
+          <div className="sticky top-0 border border-black w-16 h-6"></div>
+          {items.map((item) => (
             <div
-              key={day.monthDay + uuid()}
-              className="border border-black w-14 h-64 flex place-content-center items-center"
-            >
-              {day.monthDay}
-            </div>
-          ))}
-        </div>
-        {items.map((item) => (
-          <div>
-            <div
-              className="flex sticky top-0 place-content-center items-center text-xs border border-black bg-slate-100 w-14 h-6"
               key={item + uuid()}
+              className="border border-black w-16 h-64 flex place-content-center items-center"
             >
               {item}
             </div>
-            {daysArr.map((day) => (
+          ))}
+        </div>
+        {daysArr.map((day) => (
+          <div>
+            <div
+              className="flex sticky top-0 place-content-center items-center text-xs border border-black bg-slate-100 w-14 h-6"
+              key={day.monthDay + uuid()}
+            >
+              {day.monthDay}
+            </div>
+            {items.map((item) => (
               <div
                 className="border border-black w-14 h-64"
                 key={item + day.monthDay + uuid()}

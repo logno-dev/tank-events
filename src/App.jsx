@@ -5,12 +5,13 @@ import { getData } from "./utils/getData.js";
 
 function App() {
   const [data, setData] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0]),
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toISOString().split("T")[0],
+  );
 
-    async function response() {
-      await getData(selectedDate, 2).then((r) => setData(r));
-    }
-
+  async function response() {
+    await getData(selectedDate, 2).then((r) => setData(r));
+  }
 
   useEffect(() => {
     response();
@@ -26,16 +27,10 @@ function App() {
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
           />
-          <Form
-          />
+          <Form />
         </div>
         <div className="h-[100dvh] flex-grow overflow-auto">
-          {data && (
-            <Grid
-              date={selectedDate}
-              data={data}
-            />
-          )}
+          {data && <Grid date={selectedDate} data={data} />}
         </div>
         <div className="h-[100%] flex-grow"></div>
       </div>
