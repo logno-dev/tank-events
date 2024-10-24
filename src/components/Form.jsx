@@ -1,6 +1,21 @@
+import { useState } from "react";
 import { items } from "../utils/constants.js";
 
-export default function Form({ data, setData }) {
+export default function Form() {
+  const [item, setItem] = useState("4000");
+  const [event, setEvent] = useState("CIP");
+  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
+  const [time, setTime] = useState("00");
+  const [status, setStatus] = useState("completed");
+
+  const formData = {
+    item,
+    event,
+    date,
+    time,
+    status,
+  };
+
   return (
     <form
       className="flex flex-col flex-grow justify-center gap-2 font-bold text-white"
@@ -13,8 +28,8 @@ export default function Form({ data, setData }) {
         Event:{" "}
         <select
           name="type"
-          value={data.event}
-          onChange={(e) => setData({ ...data, event: e.target.value })}
+          value={event}
+          onChange={(e) => setEvent(e.target.value)}
           className="text-black p-1 rounded-md"
         >
           <option value="CIP">CIP</option>
@@ -28,8 +43,8 @@ export default function Form({ data, setData }) {
         <input
           type="date"
           name="date"
-          value={data.date}
-          onChange={(e) => setData({ ...data, date: e.target.value })}
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
           className="text-black p-1 rounded-md"
         />
       </label>
@@ -37,8 +52,8 @@ export default function Form({ data, setData }) {
         Status:{" "}
         <select
           name="status"
-          value={data.status}
-          onChange={(e) => setData({ ...data, status: e.target.value })}
+          value={status}
+          onChange={(e) => setStatus(e.target.value)}
           className="text-black p-1 rounded-md"
         >
           <option value="completed">Completed</option>
@@ -48,11 +63,15 @@ export default function Form({ data, setData }) {
       <label>
         Item:{" "}
         <select
-          value={data.item}
-          onChange={(e) => setData({ ...data, item: e.target.value })}
+          value={item}
+          onChange={(e) => setItem(e.target.value)}
           className="text-black p-1 rounded-md"
         >
-          {items.map((item) => <option key={item} value={item}>{item}</option>)}
+          {items.map((item) => (
+            <option key={item} value={item}>
+              {item}
+            </option>
+          ))}
         </select>
       </label>
       <label>
@@ -63,12 +82,8 @@ export default function Form({ data, setData }) {
           max="24"
           name="time"
           id="time"
-          onChange={(e) =>
-            setData({
-              ...data,
-              time: e.target.value.slice(0, 2),
-            })}
-          value={data.time}
+          onChange={(e) => setTime(e.target.value.slice(0, 2))}
+          value={time}
           className="text-black p-1 rounded-md"
         />
       </label>

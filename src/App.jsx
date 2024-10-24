@@ -4,21 +4,13 @@ import Grid from "./components/Grid.jsx";
 import { getData } from "./utils/getData.js";
 
 function App() {
-  const [formData, setFormData] = useState({
-    item: "4000",
-    event: "CIP",
-    date: new Date().toISOString().split("T")[0],
-    time: "00",
-    status: "completed",
-  });
-  const [selectedDate, setSelectedDate] = useState(
-    new Date().toISOString().split("T")[0],
-  );
   const [data, setData] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0]),
 
-  async function response() {
-    await getData(selectedDate, 2).then((r) => setData(r));
-  }
+    async function response() {
+      await getData(selectedDate, 2).then((r) => setData(r));
+    }
+
 
   useEffect(() => {
     response();
@@ -35,8 +27,6 @@ function App() {
             onChange={(e) => setSelectedDate(e.target.value)}
           />
           <Form
-            data={formData}
-            setData={setFormData}
           />
         </div>
         <div className="h-[100dvh] flex-grow overflow-auto">
