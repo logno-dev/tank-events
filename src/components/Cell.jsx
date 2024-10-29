@@ -12,7 +12,7 @@ export default function Cell({ data, day, item }) {
 
   return (
     <>
-      <div className="relative flex justify-center">
+      <div key={uuid()} className="relative flex justify-center">
         {items.map((i) => {
           const hour = Number(i.date.split("T")[1].split(":")[0]);
           return (
