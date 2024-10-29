@@ -1,35 +1,41 @@
 import { useState } from "react";
 import { items } from "../utils/constants.js";
+import { addEvent } from "../utils/actions.js";
 
-export default function Form() {
+export default function Form({ data, setData }) {
   const [item, setItem] = useState("4000");
-  const [event, setEvent] = useState("CIP");
+  const [type, setType] = useState("CIP");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [time, setTime] = useState("00");
   const [status, setStatus] = useState("completed");
 
   const formData = {
     item,
-    event,
-    date,
+    type,
+    date: date + "T" + time.padStart(2, "0") + ":00:00",
     time,
     status,
   };
+
+  function add(e) {
+    const id = addEvent(e);
+    setData([...data, { id, ...e }]);
+  }
 
   return (
     <form
       className="flex flex-col flex-grow justify-center gap-2 font-bold text-white"
       onSubmit={(e) => {
         e.preventDefault();
-        console.log(data);
+        add(formData);
       }}
     >
       <label>
         Event:{" "}
         <select
           name="type"
-          value={event}
-          onChange={(e) => setEvent(e.target.value)}
+          value={type}
+          onChange={(e) => setType(e.target.value)}
           className="text-black p-1 rounded-md"
         >
           <option value="CIP">CIP</option>

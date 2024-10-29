@@ -27,7 +27,7 @@ function App() {
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
           />
-          <Form />
+          <Form data={data} setData={setData} />
         </div>
         <div className="h-[100dvh] flex-grow overflow-auto">
           {data && <Grid date={selectedDate} data={data} />}
