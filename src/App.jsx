@@ -30,7 +30,7 @@ function App() {
           <Form data={data} setData={setData} />
         </div>
         <div className="h-[100dvh] flex-grow overflow-auto">
-          {data && <Grid date={selectedDate} data={data} />}
+          {data && <Grid date={selectedDate} data={data} setData={setData} />}
         </div>
         <div className="h-[100%] flex-grow"></div>
       </div>

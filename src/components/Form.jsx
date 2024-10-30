@@ -17,8 +17,9 @@ export default function Form({ data, setData }) {
     status,
   };
 
-  function add(e) {
-    const id = addEvent(e);
+  async function add(e) {
+    const id = await addEvent(e);
+    console.log(id);
     setData([...data, { id, ...e }]);
   }
 
