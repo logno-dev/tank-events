@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Form from "./components/Form.jsx";
 import Grid from "./components/Grid.jsx";
 import { getData } from "./utils/getData.js";
+import Violations from "./components/Violations.jsx";
 
 function App() {
   const [data, setData] = useState([]);
@@ -10,7 +11,10 @@ function App() {
   );
 
   async function response() {
-    await getData(selectedDate, 2).then((r) => setData(r));
+    await getData(selectedDate, 2).then((r) => {
+      setData(r);
+      console.log(r);
+    });
   }
 
   useEffect(() => {
@@ -32,7 +36,9 @@ function App() {
         <div className="h-[100dvh] flex-grow overflow-auto">
           {data && <Grid date={selectedDate} data={data} setData={setData} />}
         </div>
-        <div className="h-[100%] flex-grow"></div>
+        <div className="h-[100%] flex-grow">
+          <Violations data={data} />
+        </div>
       </div>
     </>
   );
