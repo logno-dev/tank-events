@@ -69,6 +69,7 @@ export default function Grid({ date, data, setData }) {
           </div>
         ))}
       </div>
+      <div className="h-12"></div>
     </>
   );
 }

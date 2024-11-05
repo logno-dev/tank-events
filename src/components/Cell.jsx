@@ -26,10 +26,12 @@ export default function Cell({ data, day, item, setData }) {
           const hour = Number(i.date.split("T")[1].split(":")[0]);
           return (
             <button
-              className={"absolute w-full h-[10px] text-[8px] cursor-pointer flex justify-center timeline-" +
+              className={
+                "absolute w-full h-[10px] text-[8px] cursor-pointer flex justify-center timeline-" +
                 hour +
                 " " +
-                i.type}
+                i.type
+              }
               key={i.id + i.type + i.item + uuid()}
               onClick={() => openModal(i)}
             >

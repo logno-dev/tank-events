@@ -4,6 +4,7 @@ import Grid from "./components/Grid.jsx";
 import { getData } from "./utils/getData.js";
 import Violations from "./components/Violations.jsx";
 import Download from "./components/Download.jsx";
+import Legend from "./components/Legend.jsx";
 
 function App() {
   const [data, setData] = useState([]);
@@ -25,7 +26,10 @@ function App() {
   return (
     <>
       <div className="flex min-h-[100dvh] place-items-center items-start">
-        <div className="flex px-2 py-4 min-h-[100dvh] bg-slate-500 flex-col flex-grow place-items-center">
+        <div className="flex px-2 py-4 min-h-[100dvh] bg-slate-500 flex-col flex-grow place-items-center font-bold">
+          <label className="text-slate-100" for="selected-date">
+            Select Date to View:
+          </label>
           <input
             type="date"
             name="selected-date"
@@ -42,6 +46,7 @@ function App() {
           <Violations data={data} />
         </div>
       </div>
+      <Legend />
     </>
   );
 }
