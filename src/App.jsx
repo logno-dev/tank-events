@@ -3,6 +3,7 @@ import Form from "./components/Form.jsx";
 import Grid from "./components/Grid.jsx";
 import { getData } from "./utils/getData.js";
 import Violations from "./components/Violations.jsx";
+import Download from "./components/Download.jsx";
 
 function App() {
   const [data, setData] = useState([]);
@@ -32,6 +33,7 @@ function App() {
             onChange={(e) => setSelectedDate(e.target.value)}
           />
           <Form data={data} setData={setData} />
+          <Download />
         </div>
         <div className="h-[100dvh] flex-grow overflow-auto">
           {data && <Grid date={selectedDate} data={data} setData={setData} />}

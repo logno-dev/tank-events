@@ -18,3 +18,19 @@ export async function getData(date, width) {
     });
   return data;
 }
+
+export async function exportData(startDate, endDate) {
+  const data = await client
+    .execute({
+      sql:
+        "select * from events where date >= :startDate and date < :endDate order by date desc",
+      args: {
+        startDate: startDate,
+        endDate: endDate,
+      },
+    })
+    .then((response) => {
+      return response.rows;
+    });
+  return data;
+}
