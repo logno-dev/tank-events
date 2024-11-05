@@ -11,7 +11,7 @@ export default function Grid({ date, data, setData }) {
   const [startDate, setStartDate] = useState();
 
   useEffect(() => {
-    const [sd, _, d] = getDateRange(date, 2);
+    const [sd, _, d] = getDateRange(date, 3);
     setStartDate(sd);
     setDays(d);
   }, [date]);
@@ -26,13 +26,11 @@ export default function Grid({ date, data, setData }) {
       const dayOfWeek = new Date(
         new Date(startDate).setDate(new Date(startDate).getDate() + i),
       );
-      const dayOfWeekMinusOne = new Date(
-        new Date(startDate).setDate(new Date(startDate).getDate() + i - 1),
-      );
-      const monthDay = String(dayOfWeek.getMonth() + 1).padStart(2, "0") +
+      const monthDay =
+        String(dayOfWeek.getMonth() + 1).padStart(2, "0") +
         "/" +
         String(dayOfWeek.getDate()).padStart(2, "0");
-      tempDaysArr.push({ monthDay, fullDate: dayOfWeekMinusOne.toISOString() });
+      tempDaysArr.push({ monthDay, fullDate: dayOfWeek.toISOString() });
     }
     console.log(tempDaysArr);
     return tempDaysArr;
@@ -42,8 +40,7 @@ export default function Grid({ date, data, setData }) {
     <>
       <div className="flex">
         <div>
-          <div className="sticky top-0 border border-black bg-slate-100 w-16 h-6 z-30">
-          </div>
+          <div className="sticky top-0 border border-black bg-slate-100 w-16 h-6 z-30"></div>
           {daysArr.map((day) => (
             <div
               key={day.monthDay.toString() + uuid().toString()}

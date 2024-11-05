@@ -7,7 +7,7 @@ export function getDateRange(date, buffer) {
       new Date(selectDate.toISOString()).setDate(
         selectDate.getDate() - (selectDate.getDay() + buffer),
       ),
-    ).setHours(0 - tzo),
+    ).setHours(12 - tzo),
   ).toISOString();
 
   const endDate = new Date(
