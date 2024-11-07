@@ -6,14 +6,19 @@ export default function Dump() {
 
   function add(e) {
     e.preventDefault();
+
     const item = {
       item: "skid",
       type: "DUMP",
-      date: new Date().toISOString(),
-      time: String(new Date().getHours()).padStart(2, "0"),
+      date:
+        new Date().toISOString().split("T")[0] +
+        "T" +
+        String(new Date().getHours()).padStart(2, "0") +
+        ":00:00",
       status: "completed",
     };
     addEvent(item);
+    // console.log(item);
     setAdded(true);
     setTimeout(() => {
       setAdded(false);
