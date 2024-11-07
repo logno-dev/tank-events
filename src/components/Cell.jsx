@@ -21,7 +21,11 @@ export default function Cell({ data, day, item, setData }) {
 
   return (
     <>
-      <div key={uuid()} className="relative flex justify-center">
+      <div
+        className={
+          "relative flex justify-center min-w-14 border border-1 border-slate-900"
+        }
+      >
         {items.map((i) => {
           const hour = Number(i.date.split("T")[1].split(":")[0]);
           return (
@@ -45,6 +49,7 @@ export default function Cell({ data, day, item, setData }) {
             setEdit={setEdit}
             data={data}
             setData={setData}
+            key={uuid().toString()}
           />
         )}
       </div>

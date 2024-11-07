@@ -37,36 +37,53 @@ export default function Grid({ date, data, setData }) {
 
   return (
     <>
-      <div className="flex">
+      <div className="flex flex-col">
         <div>
-          <div className="sticky top-0 border border-black bg-slate-100 w-16 h-6 z-30"></div>
-          {daysArr.map((day) => (
-            <div
-              key={day.monthDay.toString() + uuid().toString()}
-              className="border border-black w-16 h-[250px] flex place-content-center items-center"
-            >
-              {day.monthDay}
-            </div>
-          ))}
-        </div>
-        {items.map((item) => (
-          <div key={item.toString() + uuid().toString()}>
-            <div
-              className="flex sticky top-0 place-content-center items-center text-xs border border-black bg-slate-100 w-14 h-6 z-30"
-              key={uuid().toString()}
-            >
-              {item}
-            </div>
-            {daysArr.map((day) => (
+          <div className="flex">
+            <div className="sticky top-0 border border-black bg-slate-100 w-16 h-6 z-30"></div>
+            {items.map((item) => (
               <div
-                className="border border-black w-14 h-[250px]"
-                key={item.toString() + day.monthDay + uuid().toString()}
+                className="flex sticky top-0 place-content-center items-center text-xs border border-black bg-slate-100 min-w-14 h-6 z-30"
+                key={uuid().toString()}
               >
-                {d && <Cell data={d} day={day} item={item} setData={setData} />}
+                {item}
               </div>
             ))}
           </div>
-        ))}
+          {daysArr.map((day) => {
+            const date = day.fullDate.split(".")[0].split("T")[0];
+            const arr = d.filter((i) => {
+              return i.date.split("T")[0] == date;
+            });
+            return (
+              <div
+                key={uuid().toString()}
+                className={
+                  "flex bg-slate-200 " + (arr.length !== 0 ? "populated" : null)
+                }
+              >
+                <div
+                  key={day.monthDay.toString() + uuid().toString()}
+                  className="border border-black min-w-16 flex place-content-center items-center"
+                >
+                  {day.monthDay}
+                </div>
+                {items.map(
+                  (item) =>
+                    d && (
+                      <Cell
+                        data={d}
+                        day={day}
+                        item={item}
+                        setData={setData}
+                        key={uuid().toString()}
+                      />
+                    ),
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
       <div className="h-12"></div>
     </>

@@ -150,3 +150,8 @@ body,
     opacity: 0;
   }
 }
+
+.populated {
+  height: 250px;
+  background-color: white;
+}
