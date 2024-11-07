@@ -32,7 +32,6 @@ export default function Grid({ date, data, setData }) {
         String(dayOfWeek.getDate()).padStart(2, "0");
       tempDaysArr.push({ monthDay, fullDate: dayOfWeek.toISOString() });
     }
-    console.log(tempDaysArr);
     return tempDaysArr;
   }, [days, startDate]);
 

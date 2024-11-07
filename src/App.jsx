@@ -15,7 +15,6 @@ function App() {
   async function response() {
     await getData(selectedDate, 2).then((r) => {
       setData(r);
-      console.log(r);
     });
   }
 
@@ -43,7 +42,7 @@ function App() {
           {data && <Grid date={selectedDate} data={data} setData={setData} />}
         </div>
         <div className="h-[100%] flex-grow">
-          <Violations data={data} />
+          <Violations />
         </div>
       </div>
       <Legend />
