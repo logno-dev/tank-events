@@ -43,6 +43,7 @@ export default function Form({ data, setData }) {
           <option value="SB">SB</option>
           <option value="VEGE">VEGE</option>
           <option value="ESL">ESL</option>
+          <option value="MAINT">MAINT</option>
         </select>
       </label>
       <label>

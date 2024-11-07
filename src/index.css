@@ -128,3 +128,25 @@ body,
 .ESL {
   background-color: teal;
 }
+
+.MAINT {
+  background-color: rgb(255, 157, 0);
+}
+
+.DUMP {
+  background-color: yellow;
+}
+
+.fade {
+  animation: fade 3s 1;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}

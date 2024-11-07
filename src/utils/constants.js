@@ -15,4 +15,5 @@ export const items = [
   "fruitlines",
   "chiller",
   "hoses",
+  "skid",
 ];

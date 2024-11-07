@@ -8,6 +8,8 @@ export default function Legend() {
           <Label item="SB" />
           <Label item="VEGE" />
           <Label item="ESL" />
+          <Label item="MAINT" />
+          <Label item="DUMP" />
         </div>
       </div>
     </>
