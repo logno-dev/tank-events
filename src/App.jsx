@@ -38,10 +38,10 @@ function App() {
           <Form data={data} setData={setData} />
           <Download />
         </div>
-        <div className="h-[100dvh]  overflow-auto">
+        <div className="h-[100dvh]">
           {data && <Grid date={selectedDate} data={data} setData={setData} />}
         </div>
-        <div className="h-[100%] flex-grow">
+        <div className="h-[100dvh] flex-grow">
           <Violations />
         </div>
       </div>

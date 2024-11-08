@@ -26,8 +26,7 @@ export default function Grid({ date, data, setData }) {
       const dayOfWeek = new Date(
         new Date(startDate).setDate(new Date(startDate).getDate() + i),
       );
-      const monthDay =
-        String(dayOfWeek.getMonth() + 1).padStart(2, "0") +
+      const monthDay = String(dayOfWeek.getMonth() + 1).padStart(2, "0") +
         "/" +
         String(dayOfWeek.getDate()).padStart(2, "0");
       tempDaysArr.push({ monthDay, fullDate: dayOfWeek.toISOString() });
@@ -37,13 +36,14 @@ export default function Grid({ date, data, setData }) {
 
   return (
     <>
-      <div className="flex flex-col">
+      <div className="flex flex-col max-h-[100dvh] overflow-auto">
         <div>
-          <div className="flex">
-            <div className="sticky top-0 border border-black bg-slate-100 w-16 h-6 z-30"></div>
+          <div className="flex bg-slate-100 sticky top-0 z-30">
+            <div className=" border border-black w-16 h-6">
+            </div>
             {items.map((item) => (
               <div
-                className="flex sticky top-0 place-content-center items-center text-xs border border-black bg-slate-100 min-w-14 h-6 z-30"
+                className="flex place-content-center items-center text-xs border border-black bg-slate-100 w-14 h-6 z-30"
                 key={uuid().toString()}
               >
                 {item}
@@ -58,13 +58,12 @@ export default function Grid({ date, data, setData }) {
             return (
               <div
                 key={uuid().toString()}
-                className={
-                  "flex bg-slate-200 " + (arr.length !== 0 ? "populated" : null)
-                }
+                className={"flex bg-slate-200 " +
+                  (arr.length !== 0 ? "populated" : null)}
               >
                 <div
                   key={day.monthDay.toString() + uuid().toString()}
-                  className="border border-black min-w-16 flex place-content-center items-center"
+                  className="border border-black w-16 flex place-content-center items-center"
                 >
                   {day.monthDay}
                 </div>
@@ -83,9 +82,9 @@ export default function Grid({ date, data, setData }) {
               </div>
             );
           })}
+          <div className="h-12"></div>
         </div>
       </div>
-      <div className="h-12"></div>
     </>
   );
 }
