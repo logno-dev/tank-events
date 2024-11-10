@@ -65,6 +65,7 @@ export default function Edit({ event, setEdit, data, setData }) {
                 <option value="SB">SB</option>
                 <option value="VEGE">VEGE</option>
                 <option value="ESL">ESL</option>
+                <option value="DUMP">DUMP</option>
               </select>
             </label>
             <label>
