@@ -10,15 +10,13 @@ export default function Dump() {
     const item = {
       item: "skid",
       type: "DUMP",
-      date:
-        new Date().toISOString().split("T")[0] +
-        "T" +
-        String(new Date().getHours()).padStart(2, "0") +
-        ":00:00",
+      date: new Date(new Date().setMinutes(
+        new Date().getMinutes() - new Date().getTimezoneOffset(),
+      )).toISOString(),
       status: "completed",
     };
     addEvent(item);
-    // console.log(item);
+    console.log(item);
     setAdded(true);
     setTimeout(() => {
       setAdded(false);
@@ -40,13 +38,15 @@ export default function Dump() {
           DUMP!
         </button>
       </form>
-      {added ? (
-        <div className="fixed top-0 left-0 right-0 bottom-0 flex place-items-center place-content-center">
-          <div className="text-2xl text-orange-500 rounded-lg p-14 bg-slate-100 fade">
-            Dump added successfully
+      {added
+        ? (
+          <div className="fixed top-0 left-0 right-0 bottom-0 flex place-items-center place-content-center">
+            <div className="text-2xl text-orange-500 rounded-lg p-14 bg-slate-100 fade">
+              Dump added successfully
+            </div>
           </div>
-        </div>
-      ) : null}
+        )
+        : null}
     </div>
   );
 }
