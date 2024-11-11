@@ -26,7 +26,8 @@ export default function Grid({ date, data, setData }) {
       const dayOfWeek = new Date(
         new Date(startDate).setDate(new Date(startDate).getDate() + i),
       );
-      const monthDay = String(dayOfWeek.getMonth() + 1).padStart(2, "0") +
+      const monthDay =
+        String(dayOfWeek.getMonth() + 1).padStart(2, "0") +
         "/" +
         String(dayOfWeek.getDate()).padStart(2, "0");
       tempDaysArr.push({ monthDay, fullDate: dayOfWeek.toISOString() });
@@ -38,9 +39,8 @@ export default function Grid({ date, data, setData }) {
     <>
       <div className="flex flex-col max-h-[100dvh] overflow-auto">
         <div>
-          <div className="flex bg-slate-100 sticky top-0 z-30">
-            <div className=" border border-black w-16 h-6">
-            </div>
+          <div className="flex bg-slate-100 fixed top-0 z-30">
+            <div className=" border border-black w-16 h-6"></div>
             {items.map((item) => (
               <div
                 className="flex place-content-center items-center text-xs border border-black bg-slate-100 w-14 h-6 z-30"
@@ -50,6 +50,7 @@ export default function Grid({ date, data, setData }) {
               </div>
             ))}
           </div>
+          <div className="h-6"></div>
           {daysArr.map((day) => {
             const date = day.fullDate.split(".")[0].split("T")[0];
             const arr = d.filter((i) => {
@@ -58,8 +59,9 @@ export default function Grid({ date, data, setData }) {
             return (
               <div
                 key={uuid().toString()}
-                className={"flex bg-slate-200 " +
-                  (arr.length !== 0 ? "populated" : null)}
+                className={
+                  "flex bg-slate-200 " + (arr.length !== 0 ? "populated" : null)
+                }
               >
                 <div
                   key={day.monthDay.toString() + uuid().toString()}

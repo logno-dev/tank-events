@@ -137,6 +137,10 @@ body,
   background-color: yellow;
 }
 
+.SANI {
+  background-color: #85fff9;
+}
+
 .fade {
   animation: fade 3s 1;
 }

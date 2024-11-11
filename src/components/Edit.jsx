@@ -5,9 +5,7 @@ import { items } from "../utils/constants.js";
 export default function Edit({ event, setEdit, data, setData }) {
   const [item, setItem] = useState(event.item);
   const [type, setType] = useState(event.type);
-  const [date, setDate] = useState(
-    event.date.split("T")[0],
-  );
+  const [date, setDate] = useState(event.date.split("T")[0]);
   const [time, setTime] = useState(event.date.split("T")[1].split(":")[0]);
   const [status, setStatus] = useState(event.status);
 
@@ -22,12 +20,14 @@ export default function Edit({ event, setEdit, data, setData }) {
 
   function edit() {
     editEvent(formData);
-    setData([...data].map((d) => {
-      if (d.id === formData.id) {
-        return formData;
-      }
-      return d;
-    }));
+    setData(
+      [...data].map((d) => {
+        if (d.id === formData.id) {
+          return formData;
+        }
+        return d;
+      }),
+    );
     setEdit(false);
   }
 
@@ -43,8 +43,7 @@ export default function Edit({ event, setEdit, data, setData }) {
         <div
           onClick={() => setEdit(false)}
           className="fixed z-40 top-0 left-0 right-0 bottom-0 "
-        >
-        </div>
+        ></div>
         <div className="p-8 rounded-lg bg-gray-500 z-50">
           <form
             className="flex flex-col flex-grow justify-center gap-2 font-bold text-white"
@@ -65,6 +64,8 @@ export default function Edit({ event, setEdit, data, setData }) {
                 <option value="SB">SB</option>
                 <option value="VEGE">VEGE</option>
                 <option value="ESL">ESL</option>
+                <option value="MAINT">MAINT</option>
+                <option value="SANI">SANI</option>
                 <option value="DUMP">DUMP</option>
               </select>
             </label>
