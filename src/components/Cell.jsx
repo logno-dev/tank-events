@@ -22,16 +22,20 @@ export default function Cell({ data, day, item, setData }) {
   return (
     <>
       <div
-        className={"relative flex justify-center w-14 border border-1 border-slate-900"}
+        className={
+          "relative flex justify-center w-14 border border-1 border-slate-900"
+        }
       >
         {items.map((i) => {
           const hour = Number(i.date.split("T")[1].split(":")[0]);
           return (
             <button
-              className={"absolute w-full h-[10px] text-[8px] cursor-pointer flex justify-center timeline-" +
+              className={
+                "absolute w-full h-[14px] text-[10px] cursor-pointer flex justify-center timeline-" +
                 hour +
                 " " +
-                i.type}
+                i.type
+              }
               key={i.id + i.type + i.item + uuid()}
               onClick={() => openModal(i)}
             >
